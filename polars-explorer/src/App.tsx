@@ -1,39 +1,70 @@
-import {useState} from "react";
-import {invoke} from "@tauri-apps/api/core";
 import "./App.css";
 import Menu from "@/components/Menu.tsx";
+import {Channel} from "@tauri-apps/api/core";
+import {useState} from "react";
+import DataTable from "@/components/datagrid/DataTable.tsx";
+
+import {ResizablePanel, ResizableHandle, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
 
 function App() {
-    const [greetMsg, setGreetMsg] = useState("");
-    const [name, setName] = useState("");
+    // `data` contains the array of column data
+    const [data, setData] = useState<Column[]>([]);
 
-    async function greet() {
-        // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-        setGreetMsg(await invoke("greet", {name}));
+    // `receiver` receives the serialized dataframe query result from the backend
+    const receiver = new Channel<JSONValue>();
+    receiver.onmessage = (message) => {
+        setData(message.columns);
     }
-
     return (
-        <div>
-            <Menu/>
-            <main className="container">
-                <h1>Welcome to Tauri + React</h1>
+        <div className="AppContainer">
+            {/* Menu Bar */}
+            <Menu receiver={receiver}/>
 
-                <form
-                    className="row"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        greet();
-                    }}
-                >
-                    <input
-                        id="greet-input"
-                        onChange={(e) => setName(e.currentTarget.value)}
-                        placeholder="Enter a name..."
-                    />
-                    <button type="submit">Greet</button>
-                </form>
-                <p>{greetMsg}</p>
-            </main>
+            <ResizablePanelGroup direction="horizontal">
+                {/* Left Panel: Dataframes and Views Selector */}
+                <ResizablePanel defaultSize={20}>
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={50}>
+                            <div>DataFrame selector</div>
+                        </ResizablePanel>
+                        <ResizableHandle withHandle/>
+                        <ResizablePanel defaultSize={50}>
+                            <div>DataFrame views</div>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </ResizablePanel>
+
+                <ResizableHandle withHandle/>
+
+                {/* Middle Panel: Data Viewer*/}
+                <ResizablePanel defaultSize={60}>
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={90} className="!overflow-y-scroll">
+                            <DataTable columns={data}/>
+                        </ResizablePanel>
+                        <ResizableHandle withHandle/>
+                        <ResizablePanel defaultSize={10}>
+                            <div>Pagination Control</div>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+
+                </ResizablePanel>
+
+                <ResizableHandle withHandle/>
+
+                {/* Right Panel: Query History and Query Crafter*/}
+                <ResizablePanel defaultSize={20}>
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={50}>
+                            <div>Query History</div>
+                        </ResizablePanel>
+                        <ResizableHandle withHandle/>
+                        <ResizablePanel defaultSize={50}>
+                            <div>Query crafter</div>
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </ResizablePanel>
+            </ResizablePanelGroup>
         </div>
 
     );
