@@ -7,9 +7,16 @@ import {
     MenubarTrigger,
 } from "@/components/ui/menubar"
 
-import {Channel, invoke} from "@tauri-apps/api/core";
+import {DataChannel, InfoChannel, PageChannel} from "../Typing.ts"
+import {open_csv} from "@/services/backend.ts";
 
-export default function Menu({receiver}: { receiver: Channel<JSONValue> }) {
+
+export default function Menu({infoChannel, dataChannel, pageChannel, pageSize}: {
+    infoChannel: InfoChannel,
+    dataChannel: DataChannel,
+    pageChannel: PageChannel,
+    pageSize: number
+}) {
 
     // 1.c.ii Receive JSON using receiver.onmessage
     return (<Menubar className="">
@@ -17,7 +24,12 @@ export default function Menu({receiver}: { receiver: Channel<JSONValue> }) {
             <MenubarTrigger>File</MenubarTrigger>
             <MenubarContent>
                 <MenubarItem onClick={async () => {
-                    await invoke("import_dataframe", {receiver});
+                    await open_csv({
+                        infoChannel: infoChannel,
+                        dataChannel: dataChannel,
+                        pageChannel: pageChannel,
+                        pageSize: pageSize
+                    });
                 }}>Open File</MenubarItem>
                 <MenubarItem>New Window</MenubarItem>
                 <MenubarSeparator/>

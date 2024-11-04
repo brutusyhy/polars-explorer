@@ -1,69 +1,51 @@
 import "./App.css";
-import Menu from "@/components/Menu.tsx";
-import {Channel} from "@tauri-apps/api/core";
-import {useState} from "react";
-import DataTable from "@/components/datagrid/DataTable.tsx";
 
-import {ResizablePanel, ResizableHandle, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
+
+import {useDataFrame} from "@/hooks/DataFrame.ts";
+
+import Menu from "@/components/Menu.tsx";
+import {ResizableHandle, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
+import DataframePanel from "@/components/DataframePanel.tsx";
+import DataviewPanel from "@/components/DataviewPanel.tsx";
+import QueryPanel from "@/components/QueryPanel.tsx";
+import {setupChannels} from "@/services/channels.ts";
+import {useDataview} from "@/hooks/Dataview.ts";
 
 function App() {
     // `data` contains the array of column data
-    const [data, setData] = useState<Column[]>([]);
+    // const [data, setData] = useState<TableData>([]);
+    const {
+        dataFrameMap,
+        selectedDataFrame,
+        loadDataFrame,
+        setSelectedDataFrame
+    } = useDataFrame();
+    const {
+        data,
+        setData,
+        pagination,
+        setPagination,
+        updatePagination
+    } = useDataview();
+    const channels = setupChannels({loadDataFrame, setData, setPagination})
 
-    // `receiver` receives the serialized dataframe query result from the backend
-    const receiver = new Channel<JSONValue>();
-    receiver.onmessage = (message) => {
-        setData(message.columns);
-    }
+
     return (
         <div className="AppContainer">
             {/* Menu Bar */}
-            <Menu receiver={receiver}/>
-
+            <Menu {...channels} pageSize={10}/>
             <ResizablePanelGroup direction="horizontal">
-                {/* Left Panel: Dataframes and Views Selector */}
-                <ResizablePanel defaultSize={20}>
-                    <ResizablePanelGroup direction="vertical">
-                        <ResizablePanel defaultSize={50}>
-                            <div>DataFrame selector</div>
-                        </ResizablePanel>
-                        <ResizableHandle withHandle/>
-                        <ResizablePanel defaultSize={50}>
-                            <div>DataFrame views</div>
-                        </ResizablePanel>
-                    </ResizablePanelGroup>
-                </ResizablePanel>
-
+                {/* Left Panel: DataframePanel */}
+                <DataframePanel dataFrameMap={dataFrameMap}/>
                 <ResizableHandle withHandle/>
 
-                {/* Middle Panel: Data Viewer*/}
-                <ResizablePanel defaultSize={60}>
-                    <ResizablePanelGroup direction="vertical">
-                        <ResizablePanel defaultSize={90} className="!overflow-y-scroll">
-                            <DataTable columns={data}/>
-                        </ResizablePanel>
-                        <ResizableHandle withHandle/>
-                        <ResizablePanel defaultSize={10}>
-                            <div>Pagination Control</div>
-                        </ResizablePanel>
-                    </ResizablePanelGroup>
-
-                </ResizablePanel>
-
+                {/* Middle Panel: DataviewPanel*/}
+                {/* TODO: We are now passing `data`, but it actually should be based on Dataframe states */}
+                <DataviewPanel data={data}/>
                 <ResizableHandle withHandle/>
 
                 {/* Right Panel: Query History and Query Crafter*/}
-                <ResizablePanel defaultSize={20}>
-                    <ResizablePanelGroup direction="vertical">
-                        <ResizablePanel defaultSize={50}>
-                            <div>Query History</div>
-                        </ResizablePanel>
-                        <ResizableHandle withHandle/>
-                        <ResizablePanel defaultSize={50}>
-                            <div>Query crafter</div>
-                        </ResizablePanel>
-                    </ResizablePanelGroup>
-                </ResizablePanel>
+                <QueryPanel/>
             </ResizablePanelGroup>
         </div>
 
