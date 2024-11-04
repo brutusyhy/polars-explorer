@@ -1,8 +1,9 @@
-import DataCell from "@/components/datagrid/DataCell.tsx";
-import DataHeader from "@/components/datagrid/DataHeader.tsx";
+import DataCell from "@/components/dataview/DataCell.tsx";
+import DataHeader from "@/components/dataview/DataHeader.tsx";
+import {ColumnData} from "@/Typing.ts";
 
 
-export default function DataTable({columns}: { columns: Column[] }) {
+export default function DataTable({columns}: { columns: ColumnData[] }) {
     if (columns.length == 0) {
         return <></>;
     }
