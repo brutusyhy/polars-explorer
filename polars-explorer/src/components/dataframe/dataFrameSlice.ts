@@ -26,13 +26,14 @@ export const dataFrameSlice = createSlice({
             }
             state.openedDataFrame = df.key;
         },
-        selectDataFrame: (state, action: PayloadAction<Key>) => {
+        openDataFrame: (state, action: PayloadAction<Key>) => {
             state.openedDataFrame = action.payload;
         }
     }
 })
-export const {loadDataFrame, selectDataFrame} = dataFrameSlice.actions;
+export const {loadDataFrame, openDataFrame} = dataFrameSlice.actions;
 export const selectDataFrameMap = (state: RootState) => state.dataFrame.dataFrameMap;
 export const selectOpenedDataFrame = (state: RootState) => state.dataFrame.openedDataFrame;
+
 
 export default dataFrameSlice.reducer;

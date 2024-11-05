@@ -28,6 +28,7 @@ export type Key = number;
 export type DataFrameInfo = {
     key: Key,
     name: string,
+    length: number,
 }
 
 export type InfoChannel = Channel<DataFrameInfo>;
@@ -43,7 +44,7 @@ export type DataFrameMap = {
 export type PageInfo = {
     pageSize: number,
     currentPage: number,
-    totalPages: number,
+    totalPage: number,
 }
 
 export type PageChannel = Channel<PageInfo>;
