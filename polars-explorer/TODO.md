@@ -41,8 +41,8 @@ This would ensure optimal performance, especially for huge datasets.
 ### 3. Paginated query
 
 - [x] a. Implement Paginated Query on the backend (11/4/2024)
-- [ ] b. Implement Pagination Control on the frontend
-    - [ ] i. The controls should update using the pagination info
+- [ ] b. Implement PageInfo Control on the frontend
+    - [ ] i. The controls should update using the pageInfo info
     - [ ] ii. Each action made on the controls should initiate a query
     - [ ] iii. The user should be able to change page size
 
@@ -62,17 +62,20 @@ This would ensure optimal performance, especially for huge datasets.
 - [x] b. Extract Typing information in Rust and TypeScript (11/4/2024)
 
 - [x] c. Set up separate hooks and services on the frontend to handle different tasks: (11/4/2024)
-    - [x] i. Dataframe List and Selection (DataFrame.ts)
-    - [x] ii. Updating Dataview and Pagination based on query results (Dataview.ts)
+    - [x] i. DataFrame List and Selection ((Removed)DataFrame.ts)
+    - [x] ii. Updating Dataview and PageInfo based on query results ((Removed)DataView.ts)
     - [x] iii. Communicating with the backend (backend.ts)
 
 - [x] d. Extract the communication channels from the main app (11/4/2024)
-    - [ ] i. Prevent unnecessary reinitialization of channels
-
+    - [ ] ~~i. Prevent unnecessary reinitialization of channels~~
+    - [ ] ii. Correctly recreate communications channels before each exchange (11/5/2024)
 - [ ] e. Review spellings and naming conventions to ensure consistency
     - Note: For some reason, it looks like Tauri's commands only accept camel case named arguments
 
 - [ ] f. Implement more robust error handling mechanism
+
+- [ ] g. Use Redux to better manage frontend states and reduce prop drilling
+    - [x] i. Let Redux manage dataframe, dataview and pagination info (11/5/2024)
 
 ### 6. Data Exploration
 

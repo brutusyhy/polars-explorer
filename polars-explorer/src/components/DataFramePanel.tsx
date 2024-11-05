@@ -1,17 +1,14 @@
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
 import DataFrameList from "@/components/dataframe/DataFrameList.tsx";
-import {DataFrameMap} from "@/Typing.ts";
 
 
-export default function DataframePanel(
-    {dataFrameMap}: { dataFrameMap: DataFrameMap }
-) {
+export default function DataFramePanel() {
     return (
         <ResizablePanel defaultSize={20}>
             <ResizablePanelGroup direction="vertical">
                 <ResizablePanel defaultSize={50}>
                     {/* Prop drilling for now...I know */}
-                    <DataFrameList dataFrameMap={dataFrameMap}/>
+                    <DataFrameList/>
                 </ResizablePanel>
                 <ResizableHandle withHandle/>
                 <ResizablePanel defaultSize={50}>

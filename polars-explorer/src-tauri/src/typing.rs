@@ -7,12 +7,12 @@ pub type JSONValue = serde_json::Value;
 pub type DataChannel = Channel<JSONValue>;
 
 #[derive(Clone, Serialize)]
-pub struct Pagination {
+pub struct PageInfo {
     pub pageSize: usize,
     pub currentPage: usize,
     pub totalPage: usize,
 }
-pub type PageChannel = Channel<Pagination>;
+pub type PageChannel = Channel<PageInfo>;
 
 #[derive(Clone, Serialize)]
 pub struct DataFrameInfo {

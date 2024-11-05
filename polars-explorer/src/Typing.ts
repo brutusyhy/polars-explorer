@@ -32,12 +32,18 @@ export type DataFrameInfo = {
 
 export type InfoChannel = Channel<DataFrameInfo>;
 
-export type DataFrameMap = Map<Key, DataFrameInfo>;
+// In order to work with Immer, we need to use vanilla object rather than map
+// Which is serializable
+//export type DataFrameMap = Map<Key, DataFrameInfo>;
+export type DataFrameMap = {
+    [id: Key]: DataFrameInfo
+}
 
-export type Pagination = {
+
+export type PageInfo = {
     pageSize: number,
     currentPage: number,
     totalPages: number,
 }
 
-export type PageChannel = Channel<Pagination>;
+export type PageChannel = Channel<PageInfo>;
