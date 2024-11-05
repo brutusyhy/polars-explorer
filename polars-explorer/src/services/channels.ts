@@ -1,37 +1,44 @@
-import {DataChannel, DataFrameInfo, InfoChannel, JSONValue, PageChannel, Pagination} from "@/Typing.ts";
+import {DataChannel, DataFrameInfo, InfoChannel, JSONValue, PageChannel, PageInfo} from "@/Typing.ts";
 import {Channel} from "@tauri-apps/api/core";
+import {useAppDispatch} from "@/redux/hooks.ts";
+import {loadDataFrame} from "@/components/dataframe/dataFrameSlice.ts";
+import {loadData} from "@/components/dataview/dataTableSlice.ts";
+import {setPagination} from "@/components/dataview/paginationSlice.ts";
 
-import {useEffect, useRef} from "react";
+
 // Info Channel notifies the frontend whether the dataframe already exists in memory
 // Data Channel provides the frontend with paginated query result
 // Page Channel provides paging information for the current result
 
-export function setupChannels({loadDataFrame, setData, setPagination}) {
+
+// Use Thunks function to generate channels before all communication
+export function createChannelsThunk(dispatch, getState) {
     console.log("Channels initiated");
 
     // Initialize channels only once and persist them across renders
-    const infoChannel = new Channel<DataFrameInfo>();
-    const dataChannel = new Channel<JSONValue>();
-    const pageChannel = new Channel<Pagination>();
+    let infoChannel: InfoChannel = new Channel<DataFrameInfo>();
+    let dataChannel: DataChannel = new Channel<JSONValue>();
+    let pageChannel: PageChannel = new Channel<PageInfo>();
 
 
-    // Attach handlers to the channels only once
     infoChannel.onmessage = (message: DataFrameInfo) => {
-        loadDataFrame(message);
+        console.log("InfoChannel Message")
+        dispatch(loadDataFrame(message));
     };
 
     dataChannel.onmessage = (message: JSONValue) => {
-        setData(message.columns);
+        console.log("DataChannel Message")
+        dispatch(loadData(message.columns));
     };
 
-    pageChannel.onmessage = (message: Pagination) => {
-        setPagination(message);
+    pageChannel.onmessage = (message: PageInfo) => {
+        console.log("PageChannel Message")
+        dispatch(setPagination(message));
     };
-
-
     return {
         infoChannel: infoChannel,
         dataChannel: dataChannel,
         pageChannel: pageChannel,
     };
 }
+

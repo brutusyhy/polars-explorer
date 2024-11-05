@@ -1,9 +1,12 @@
 import DataCell from "@/components/dataview/DataCell.tsx";
 import DataHeader from "@/components/dataview/DataHeader.tsx";
-import {ColumnData} from "@/Typing.ts";
+import {TableData} from "@/Typing.ts";
+import {useAppSelector} from "@/redux/hooks.ts";
+import {selectData} from "@/components/dataview/dataTableSlice.ts";
 
 
-export default function DataTable({columns}: { columns: ColumnData[] }) {
+export default function DataTable() {
+    const columns: TableData = useAppSelector(selectData);
     if (columns.length == 0) {
         return <></>;
     }

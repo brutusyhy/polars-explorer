@@ -6,7 +6,7 @@ use tauri::{AppHandle, ipc::Channel, State};
 
 // Handles file selection
 use crate::filesystem;
-use crate::typing::{JSONValue, ID, DataChannel, PageChannel, Pagination, InfoChannel, DataFrameInfo};
+use crate::typing::{JSONValue, ID, DataChannel, PageChannel, PageInfo, InfoChannel, DataFrameInfo};
 use crate::query::query_page;
 
 // Handles dataframe state management
@@ -70,7 +70,7 @@ pub fn open_csv(infoChannel: InfoChannel,
 
             infoChannel.send(df_info).unwrap();
             dataChannel.send(query_result).unwrap();
-            pageChannel.send(Pagination {
+            pageChannel.send(PageInfo {
                 pageSize: pageSize,
                 currentPage: 0,
                 totalPage: total_page,
