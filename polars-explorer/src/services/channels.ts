@@ -12,6 +12,7 @@ import {setPagination} from "@/components/dataview/paginationSlice.ts";
 
 
 // Use Thunks function to generate channels before all communication
+// @ts-ignore
 export function createChannelsThunk(dispatch, getState) {
     console.log("Channels initiated");
 

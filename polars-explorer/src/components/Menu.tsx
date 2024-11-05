@@ -12,9 +12,6 @@ import {open_csv} from "@/services/backend.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
 import {selectPageSize} from "@/components/dataview/paginationSlice.ts";
 import {createChannelsThunk} from "@/services/channels.ts";
-import {DataChannel, DataFrameInfo, InfoChannel, JSONValue, PageChannel, PageInfo} from "@/Typing.ts";
-import {Channel} from "@tauri-apps/api/core";
-import {useEffect} from "react";
 import {store} from "@/redux/store.ts";
 
 

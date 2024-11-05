@@ -20,14 +20,14 @@ pub(crate) struct LazyFrames {
     pub(crate) next_id: ID,
 }
 
-pub fn load_lazyframe(lf: LazyFrame, lazyframes: State<LazyFrames>) -> DataFrameInfo {
+pub fn load_lazyframe(lf: LazyFrame, lazyframes: State<LazyFrames>, name: String) -> DataFrameInfo {
     // Load the lazyframe into managed states
     // Returns its DataFrameInfo entry
     let df_id = lazyframes.next_id.fetch_add(1, Ordering::Relaxed);
     lazyframes.store.lock().unwrap().insert(df_id, lf);
     DataFrameInfo {
         key: df_id,
-        name: format!("DataFrame {}", df_id),
+        name: name,
     }
 }
 
@@ -55,11 +55,17 @@ pub fn open_csv(infoChannel: InfoChannel,
                 lazyframes: State<LazyFrames>) -> Result<(), String> {
     println!("fn open_csv");
     if let Some(file_handle) = filesystem::open_file_dialog() {
+        let name =
+            file_handle
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .into_owned();
         if let Ok(lf) = LazyCsvReader::new(file_handle).finish() {
             println!("lf loaded");
             // 4.a Load LazyFrame into backend state manager
             // https://docs.rs/tauri/latest/tauri/struct.Builder.html#method.manage
-            let df_info = load_lazyframe(lf.clone(), lazyframes);
+            let df_info = load_lazyframe(lf.clone(), lazyframes, name);
 
             // Perform a paginated query and return the response
             let query_result = query_page(lf.clone(), 0, pageSize);

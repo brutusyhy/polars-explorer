@@ -7,8 +7,6 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {PaginationInstance} from "@tanstack/react-table";
-import {PageInfo} from "@/Typing.ts";
 
 
 export default function PaginationControl() {
