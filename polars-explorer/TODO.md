@@ -35,7 +35,7 @@ This would ensure optimal performance, especially for huge datasets.
 
 - [ ] b. Implement DataFrame selector panel
     - [x] i. Loading a new DataFrame should create a new item (11/4/2024)
-    - [ ] ii. The user should be able to choose between dataframes
+    - [x] ii. The user should be able to choose between dataframes (11/5/2024)
     - [ ] iii. The user should be able to rename and delete dataframes
 
 ### 3. Paginated query
@@ -53,7 +53,7 @@ This would ensure optimal performance, especially for huge datasets.
     - [ ] ii. When the user removes dataframes on the frontend, the backend should be updated as well
     - [ ] iii. (Future) The results of previous queries should be saved before switching dataframes
 
-- [ ] b. Map the displayed dataframes/views with the backend states
+- [x] b. Map the displayed dataframes/views with the backend states (11/5/2024)
 
 ### 5. Code Quality
 
@@ -64,18 +64,20 @@ This would ensure optimal performance, especially for huge datasets.
 - [x] c. Set up separate hooks and services on the frontend to handle different tasks: (11/4/2024)
     - [x] i. DataFrame List and Selection ((Removed)DataFrame.ts)
     - [x] ii. Updating Dataview and PageInfo based on query results ((Removed)DataView.ts)
-    - [x] iii. Communicating with the backend (backend.ts)
+    - [x] iii. Communicating with the backend (commands.ts)
 
 - [x] d. Extract the communication channels from the main app (11/4/2024)
     - [ ] ~~i. Prevent unnecessary reinitialization of channels~~
-    - [ ] ii. Correctly recreate communications channels before each exchange (11/5/2024)
+    - [x] ii. Correctly recreate communications channels before each exchange (11/5/2024)
 - [ ] e. Review spellings and naming conventions to ensure consistency
     - Note: For some reason, it looks like Tauri's commands only accept camel case named arguments
 
 - [ ] f. Implement more robust error handling mechanism
 
-- [ ] g. Use Redux to better manage frontend states and reduce prop drilling
+- [x] g. Use Redux to better manage frontend states and reduce prop drilling (11/5/2024)
     - [x] i. Let Redux manage dataframe, dataview and pagination info (11/5/2024)
+
+- [x] h. Modularize Rust backend (11/5/2024)
 
 ### 6. Data Exploration
 

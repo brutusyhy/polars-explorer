@@ -1,9 +1,9 @@
 import {DataChannel, DataFrameInfo, InfoChannel, JSONValue, PageChannel, PageInfo} from "@/Typing.ts";
 import {Channel} from "@tauri-apps/api/core";
-import {useAppDispatch} from "@/redux/hooks.ts";
 import {loadDataFrame} from "@/components/dataframe/dataFrameSlice.ts";
 import {loadData} from "@/components/dataview/dataTableSlice.ts";
 import {setPagination} from "@/components/dataview/paginationSlice.ts";
+import {store} from "@/redux/store.ts";
 
 
 // Info Channel notifies the frontend whether the dataframe already exists in memory
@@ -12,7 +12,8 @@ import {setPagination} from "@/components/dataview/paginationSlice.ts";
 
 
 // Use Thunks function to generate channels before all communication
-export function createChannelsThunk(dispatch, getState) {
+// @ts-ignore
+function createChannelsThunk(dispatch, getState) {
     console.log("Channels initiated");
 
     // Initialize channels only once and persist them across renders
@@ -33,6 +34,7 @@ export function createChannelsThunk(dispatch, getState) {
 
     pageChannel.onmessage = (message: PageInfo) => {
         console.log("PageChannel Message")
+        console.log(message)
         dispatch(setPagination(message));
     };
     return {
@@ -42,3 +44,4 @@ export function createChannelsThunk(dispatch, getState) {
     };
 }
 
+export const createChannels = () => store.dispatch(createChannelsThunk)
