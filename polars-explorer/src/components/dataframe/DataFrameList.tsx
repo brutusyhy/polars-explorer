@@ -1,49 +1,37 @@
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
-
-
 import {useAppDispatch, useAppSelector} from "@/redux/hooks.ts";
 import {
-    openDataFrame,
+    loadView,
     selectDataFrameMap,
-    selectOpenedDataFrame,
-    switchDataFrame
+    selectFrameViewMap,
+    selectOpenedView
 } from "@/components/dataframe/dataFrameSlice.ts";
-import React, {ReactElement, ReactEventHandler} from "react";
+import React from "react";
 import {switch_dataframe} from "@/services/commands.ts";
-import {selectPageSize} from "@/components/dataview/paginationSlice.ts";
+import {selectPageSize} from "@/components/dataexplorer/pagination/paginationSlice.ts";
 
+import {SimpleTreeView} from '@mui/x-tree-view/SimpleTreeView';
+import {TreeItem} from '@mui/x-tree-view/TreeItem';
+import DataFrame from "@/components/dataframe/DataFrame.tsx";
 
 export default function DataFrameList() {
 
     const dataFrameMap = useAppSelector(selectDataFrameMap);
-    const openedDataFrame = useAppSelector(selectOpenedDataFrame);
+    const frameViewMap = useAppSelector(selectFrameViewMap);
+    const openedView = useAppSelector(selectOpenedView);
     const pageSize = useAppSelector(selectPageSize);
     const dispatch = useAppDispatch();
 
 
-    // @ts-ignore
-    async function handleClick(event: React.MouseEvent<HTMLElement>) {
-        console.log(event.target)
-        const key = parseInt(event.target.value);
-        await dispatch(openDataFrame(key));
-        await switch_dataframe({key, pageSize})
-    }
-
     return (
-        <Accordion type="single" collapsible value={openedDataFrame.toString()}>
-            {Object.entries(dataFrameMap).map(([key, dataFrameInfo]) => (
-                <AccordionItem key={key} value={key.toString()}>
-                    <AccordionTrigger value={key.toString()}
-                                      onClick={handleClick}>{dataFrameInfo.name}</AccordionTrigger>
-                    <AccordionContent>{dataFrameInfo.length} Rows</AccordionContent>
-                </AccordionItem>
-            ))}
-        </Accordion>
+        <SimpleTreeView>
+            {Object.entries(dataFrameMap).map(
+                (df, _) => <DataFrame frameKey={df[1].key.toString()}
+                                      name={df[1].name}
+                                      views={frameViewMap[df[1].key]}/>
+            )}
+        </SimpleTreeView>
+
+
     );
 
 }

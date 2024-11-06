@@ -37,6 +37,13 @@ This would ensure optimal performance, especially for huge datasets.
     - [x] i. Loading a new DataFrame should create a new item (11/4/2024)
     - [x] ii. The user should be able to choose between dataframes (11/5/2024)
     - [ ] iii. The user should be able to rename and delete dataframes
+    - [ ] iv. Change the component into a tree view (In progress)
+
+
+- [ ] c. Implement DataFrame info panel
+    - [ ] i. The info panel will show basic dataframe information
+    - [ ] ii. It will show the list of columns and their datatypes
+    - [ ] iii. It allows easy selection of columns
 
 ### 3. Paginated query
 
@@ -55,6 +62,11 @@ This would ensure optimal performance, especially for huge datasets.
 
 - [x] b. Map the displayed dataframes/views with the backend states (11/5/2024)
 
+- [ ] c. Splitting dataframe from views (11/6/2024)
+    - [x] i. When loading a file, a dataframe and its base view will be generated (11/6/2024)
+    - [ ] ii. Every major query will generate a new view under the associated dataframe
+    - [ ] iii. Data views should keep track of their own pagination info, preserving reading progress
+
 ### 5. Code Quality
 
 - [x] a. Turn Panels into individual components (11/4/2024)
@@ -67,7 +79,7 @@ This would ensure optimal performance, especially for huge datasets.
     - [x] iii. Communicating with the backend (commands.ts)
 
 - [x] d. Extract the communication channels from the main app (11/4/2024)
-    - [ ] ~~i. Prevent unnecessary reinitialization of channels~~
+    - [x] ~~i. Prevent unnecessary reinitialization of channels~~
     - [x] ii. Correctly recreate communications channels before each exchange (11/5/2024)
 - [ ] e. Review spellings and naming conventions to ensure consistency
     - Note: For some reason, it looks like Tauri's commands only accept camel case named arguments
@@ -78,6 +90,9 @@ This would ensure optimal performance, especially for huge datasets.
     - [x] i. Let Redux manage dataframe, dataview and pagination info (11/5/2024)
 
 - [x] h. Modularize Rust backend (11/5/2024)
+
+- [ ] i. Refactor backend state management to use Manager trait
+-
 
 ### 6. Data Exploration
 

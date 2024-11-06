@@ -1,15 +1,24 @@
-import {DataFrameInfo, DataFrameMap, Key} from "@/Typing.ts";
+import {
+    DataFrameMap,
+    DataInfo,
+    FrameViewKey,
+    FrameViewMap,
+    Key,
+    ViewMap
+} from "@/Typing.ts";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "@/redux/store.ts";
 
 interface DataFrameState {
     dataFrameMap: DataFrameMap,
-    openedDataFrame: Key
+    frameViewMap: FrameViewMap
+    openedView: FrameViewKey
 }
 
 const initialState: DataFrameState = {
     dataFrameMap: {},
-    openedDataFrame: -1
+    frameViewMap: {},
+    openedView: [-1, -1]
 }
 
 export const dataFrameSlice = createSlice({
@@ -17,23 +26,34 @@ export const dataFrameSlice = createSlice({
     initialState,
     reducers: {
         // Redux uses immer internally, allowing us to "mutate" the state apparently
-        loadDataFrame: (state, action: PayloadAction<DataFrameInfo>) => {
-
-            const df = action.payload;
-            console.log(`loadDataFrame ${df.key}`)
-            if (!state.dataFrameMap.hasOwnProperty(df.key)) {
-                state.dataFrameMap[df.key] = df;
+        loadView: (state, action: PayloadAction<DataInfo>) => {
+            const {frameInfo, viewInfo} = action.payload;
+            const frameKey = frameInfo.key;
+            const viewKey = viewInfo.key;
+            console.log(`loadView ${frameInfo.name} ${viewInfo.name}`)
+            if (!state.dataFrameMap.hasOwnProperty(frameKey)) {
+                // Neither the frame nor the view exists
+                // Create both the frame and the view
+                state.dataFrameMap[frameKey] = frameInfo;
+                let newViewMap: ViewMap = {};
+                newViewMap[viewKey] = viewInfo;
+                state.frameViewMap[frameKey] = newViewMap;
+            } else if (!state.frameViewMap[frameKey].hasOwnProperty(viewKey)) {
+                // The frame exists but not the view
+                // Add the view to the frameViewMap
+                state.frameViewMap[frameKey][viewKey] = viewInfo;
             }
-            state.openedDataFrame = df.key;
+            state.openedView = [frameKey, viewKey];
+
         },
-        openDataFrame: (state, action: PayloadAction<Key>) => {
-            state.openedDataFrame = action.payload;
-        }
+
+
     }
 })
-export const {loadDataFrame, openDataFrame} = dataFrameSlice.actions;
+export const {loadView} = dataFrameSlice.actions;
 export const selectDataFrameMap = (state: RootState) => state.dataFrame.dataFrameMap;
-export const selectOpenedDataFrame = (state: RootState) => state.dataFrame.openedDataFrame;
+export const selectFrameViewMap = (state: RootState) => state.dataFrame.frameViewMap;
+export const selectOpenedView = (state: RootState) => state.dataFrame.openedView;
 
 
 export default dataFrameSlice.reducer;

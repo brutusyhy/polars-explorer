@@ -31,15 +31,38 @@ export type DataFrameInfo = {
     length: number,
 }
 
-export type InfoChannel = Channel<DataFrameInfo>;
+export type DataViewInfo = {
+    name: String,
+    key: number,
+    rows: number,
+    cols: number
+}
+
+export type DataInfo = {
+    frameInfo: DataFrameInfo,
+    viewInfo: DataViewInfo
+}
+
+export type InfoChannel = Channel<DataInfo>;
 
 // In order to work with Immer, we need to use vanilla object rather than map
 // Which is serializable
 //export type DataFrameMap = Map<Key, DataFrameInfo>;
 export type DataFrameMap = {
-    [id: Key]: DataFrameInfo
+    [frameKey: Key]: DataFrameInfo
 }
 
+export type ViewMap = {
+    [viewKey: Key]: DataViewInfo
+}
+
+// Map frame to their views
+export type FrameViewMap = {
+    [frameKey: Key]: ViewMap
+}
+
+
+export type FrameViewKey = [frameKey: number, viewKey: number];
 
 export type PageInfo = {
     pageSize: number,

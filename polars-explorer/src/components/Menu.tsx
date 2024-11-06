@@ -10,7 +10,7 @@ import {
 
 import {open_csv} from "@/services/commands.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectPageSize} from "@/components/dataview/paginationSlice.ts";
+import {selectPageSize} from "@/components/dataexplorer/pagination/paginationSlice.ts";
 import {createChannels} from "@/services/channels.ts";
 
 
