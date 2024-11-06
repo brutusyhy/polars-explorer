@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-use std::sync::atomic::{AtomicUsize};
-use std::sync::{Mutex};
 use crate::LoadedFrame::LoadedFrame;
-use crate::Payload::{FullResponse};
+use crate::Payload::FullResponse;
+use std::collections::HashMap;
+use std::sync::atomic::AtomicUsize;
+use std::sync::Mutex;
 
 pub type Key = AtomicUsize;
 pub(crate) struct LoadedFrameManager {
@@ -28,7 +28,10 @@ impl LoadedFrameManager {
             .get(&frame_key).unwrap()
             .frameInfo.to_owned();
 
-        FullResponse { view: viewResponse, frameInfo }
+        FullResponse {
+            view: viewResponse,
+            frameInfo,
+        }
     }
     pub fn query_page(&self, frame_key: usize, view_key: usize, page: usize) -> FullResponse {
         // A helper function to first turn the frame to the desired page
@@ -41,5 +44,3 @@ impl LoadedFrameManager {
         self.query_view(frame_key, view_key)
     }
 }
-
-

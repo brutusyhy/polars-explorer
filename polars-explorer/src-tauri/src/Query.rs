@@ -12,10 +12,7 @@ pub fn get_rows(lf: LazyFrame) -> PolarsResult<usize> {
         .last()
         .collect();
 
-
-    Ok(count_df?
-        .column("index")?
-        .get(0)?.try_extract::<usize>()?)
+    Ok(count_df?.column("index")?.get(0)?.try_extract::<usize>()?)
 }
 
 // An optimized method to query the number of columns

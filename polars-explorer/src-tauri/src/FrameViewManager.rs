@@ -1,8 +1,8 @@
+use crate::FrameView::FrameView;
+use crate::State::Key;
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use std::sync::Mutex;
-use crate::FrameView::FrameView;
-use crate::State::Key;
 
 // Each LoadedFrame keeps a FrameViewManager
 // Which is responsible for handling FrameViews
@@ -33,4 +33,3 @@ impl FrameViewManager {
     //         .get(&view_key).unwrap()
     // }
 }
-

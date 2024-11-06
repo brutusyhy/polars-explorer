@@ -1,13 +1,13 @@
-use std::sync::atomic::Ordering;
-use std::sync::Mutex;
-use polars::prelude::{IdxSize, LazyFrame};
-use tauri::CursorIcon::Default;
-use tauri::State;
 use crate::FrameView::FrameView;
 use crate::FrameViewManager::FrameViewManager;
 use crate::Payload::{DataFrameInfo, PageInfo, ViewResponse};
 use crate::Query::get_rows;
 use crate::State::LoadedFrameManager;
+use polars::prelude::{IdxSize, LazyFrame};
+use std::sync::atomic::Ordering;
+use std::sync::Mutex;
+use tauri::CursorIcon::Default;
+use tauri::State;
 
 pub struct LoadedFrame {
     // Keep the lazyframe, as well as certain cached results
@@ -15,7 +15,6 @@ pub struct LoadedFrame {
     pub(crate) view_manager: Mutex<FrameViewManager>,
     pub(crate) frameInfo: DataFrameInfo,
 }
-
 
 impl LoadedFrame {
     pub fn load(base: LazyFrame, name: String, state: &State<LoadedFrameManager>) -> usize {
@@ -33,11 +32,17 @@ impl LoadedFrame {
         };
         // Initialize the loadedframe with a base view
         // The base view will always have a key of 0
-        let _ = loaded_frame.view_manager
-            .lock().unwrap()
+        let _ = loaded_frame
+            .view_manager
+            .lock()
+            .unwrap()
             .add(FrameView::base(name, base));
         // Insert the LoadedFrame into the managed state
-        state.frame_map.lock().unwrap().insert(frame_key, loaded_frame);
+        state
+            .frame_map
+            .lock()
+            .unwrap()
+            .insert(frame_key, loaded_frame);
         frame_key
     }
 
