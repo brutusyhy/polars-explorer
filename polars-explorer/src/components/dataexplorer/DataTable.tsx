@@ -1,8 +1,8 @@
-import DataCell from "@/components/dataview/DataCell.tsx";
-import DataHeader from "@/components/dataview/DataHeader.tsx";
+import DataCell from "@/components/dataexplorer/datatable/DataCell.tsx";
+import DataHeader from "@/components/dataexplorer/datatable/DataHeader.tsx";
 import {TableData} from "@/Typing.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectData} from "@/components/dataview/dataTableSlice.ts";
+import {selectData} from "@/components/dataexplorer/datatable/dataTableSlice.ts";
 
 
 export default function DataTable() {

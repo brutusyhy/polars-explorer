@@ -1,5 +1,5 @@
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectCurrentPage} from "@/components/dataview/paginationSlice.ts";
+import {selectCurrentPage} from "@/components/dataexplorer/pagination/paginationSlice.ts";
 import {PaginationItem, PaginationPrevious} from "@/components/ui/pagination.tsx";
 
 export default function PreviousPage() {

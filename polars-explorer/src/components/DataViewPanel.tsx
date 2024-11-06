@@ -1,6 +1,6 @@
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
-import DataTable from "@/components/dataview/DataTable.tsx";
-import PaginationControl from "@/components/dataview/PaginationControl.tsx";
+import DataTable from "@/components/dataexplorer/DataTable.tsx";
+import PaginationControl from "@/components/dataexplorer/PaginationControl.tsx";
 
 export default function DataViewPanel() {
 

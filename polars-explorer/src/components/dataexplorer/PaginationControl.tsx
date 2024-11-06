@@ -12,9 +12,9 @@ import {
     selectCurrentPage,
     selectPageSize,
     selectTotalPage,
-} from "@/components/dataview/paginationSlice.ts";
-import NextPage from "@/components/dataview/NextPage.tsx";
-import PreviousPage from "@/components/dataview/PreviousPage.tsx";
+} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+import NextPage from "@/components/dataexplorer/pagination/NextPage.tsx";
+import PreviousPage from "@/components/dataexplorer/pagination/PreviousPage.tsx";
 
 
 export default function PaginationControl() {

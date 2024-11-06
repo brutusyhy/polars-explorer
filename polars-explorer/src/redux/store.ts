@@ -2,8 +2,8 @@
 
 import {configureStore} from '@reduxjs/toolkit'
 import dataFrameReducer from '@/components/dataframe/dataFrameSlice.ts'
-import dataTableReducer from "@/components/dataview/dataTableSlice.ts";
-import paginationReducer from "@/components/dataview/paginationSlice.ts"
+import dataTableReducer from "@/components/dataexplorer/datatable/dataTableSlice.ts";
+import paginationReducer from "@/components/dataexplorer/pagination/paginationSlice.ts"
 
 export const store = configureStore({
     reducer: {
