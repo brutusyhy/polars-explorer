@@ -1,6 +1,6 @@
-use serde::Serialize;
 use crate::Channels::{DataChannel, InfoChannel, PageChannel};
 use crate::FrameView::DataViewInfo;
+use serde::Serialize;
 
 pub type JSONValue = serde_json::Value;
 
@@ -11,20 +11,17 @@ pub struct PageInfo {
     pub totalPage: usize,
 }
 
-
 #[derive(Clone, Serialize, Debug)]
 pub struct DataFrameInfo {
     pub key: usize,
     pub name: String,
 }
 
-
 pub struct ViewResponse {
     pub data: JSONValue,
     pub pageInfo: PageInfo,
     pub viewInfo: DataViewInfo,
 }
-
 
 #[derive(Clone, Serialize)]
 pub struct DataInfo {
@@ -38,10 +35,12 @@ pub struct FullResponse {
 }
 
 impl FullResponse {
-    pub fn send(self,
-                infoChannel: InfoChannel,
-                dataChannel: DataChannel,
-                pageChannel: PageChannel) -> Result<(), String> {
+    pub fn send(
+        self,
+        infoChannel: InfoChannel,
+        dataChannel: DataChannel,
+        pageChannel: PageChannel,
+    ) -> Result<(), String> {
         // TODO Here's the thing, I want frameInfo and viewInfo to store slightly different info
         // But you can't store them at a single layer, and I don't want to create an extra channel
         // A helper function to send the full response to the frontend
