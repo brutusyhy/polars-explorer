@@ -33,24 +33,24 @@ This would ensure optimal performance, especially for huge datasets.
 
 - [x] a. Fix Data Table's horizontal scrolling (11/4/2024)
 
-- [ ] b. Implement DataFrame selector panel
+- [ ] b. Implement DataFrame panel
     - [x] i. Loading a new DataFrame should create a new item (11/4/2024)
     - [x] ii. The user should be able to choose between dataframes (11/5/2024)
-    - [ ] iii. The user should be able to rename and delete dataframes
-    - [ ] iv. Change the component into a tree view (In progress)
+    - [ ] iii. The user should be able to rename and delete dataframe/views
+    - [x] iv. Change the component into a tree view (11/8/2024)
 
 
-- [ ] c. Implement DataFrame info panel
-    - [ ] i. The info panel will show basic dataframe information
-    - [ ] ii. It will show the list of columns and their datatypes
-    - [ ] iii. It allows easy selection of columns
+- [x] c. Implement FrameView info panel (11/8/2024)
+    - [x] i. The info panel will show basic FrameView information (11/8/2024)
+    - [x] ii. It will show the list of columns and their datatypes (11/8/2024)
+    - [x] iii. It allows easy selection of columns (11/8/2024)
 
 ### 3. Paginated query
 
 - [x] a. Implement Paginated Query on the backend (11/4/2024)
 - [ ] b. Implement PageInfo Control on the frontend
-    - [ ] i. The controls should update using the pageInfo info
-    - [ ] ii. Each action made on the controls should initiate a query
+    - [x] i. The controls should update using the pageInfo info (11/8/2024)
+    - [x] ii. Each action made on the controls should initiate a query (11/8/2024)
     - [ ] iii. The user should be able to change page size
 
 ### 4. State Management
@@ -58,14 +58,13 @@ This would ensure optimal performance, especially for huge datasets.
 - [ ] a. Keep the loaded dataframe in the background state manager
     - [X] i. Implement a HashMap tracking different dataframes with ID (11/4/2024)
     - [ ] ii. When the user removes dataframes on the frontend, the backend should be updated as well
-    - [ ] iii. (Future) The results of previous queries should be saved before switching dataframes
 
 - [x] b. Map the displayed dataframes/views with the backend states (11/5/2024)
 
 - [ ] c. Splitting dataframe from views (11/6/2024)
     - [x] i. When loading a file, a dataframe and its base view will be generated (11/6/2024)
     - [ ] ii. Every major query will generate a new view under the associated dataframe
-    - [ ] iii. Data views should keep track of their own pagination info, preserving reading progress
+    - [x] iii. Data views should keep track of their own pagination info, preserving reading progress (11/8/2024)
 
 ### 5. Code Quality
 
@@ -81,6 +80,7 @@ This would ensure optimal performance, especially for huge datasets.
 - [x] d. Extract the communication channels from the main app (11/4/2024)
     - [x] ~~i. Prevent unnecessary reinitialization of channels~~
     - [x] ii. Correctly recreate communications channels before each exchange (11/5/2024)
+    -
 - [ ] e. Review spellings and naming conventions to ensure consistency
     - Note: For some reason, it looks like Tauri's commands only accept camel case named arguments
 
@@ -98,3 +98,4 @@ This would ensure optimal performance, especially for huge datasets.
 
 - [ ] a. Ensure that polars can handle ill-formatted dataset
 - [ ] b. Allow the app to accept different formats than csv
+- [ ] c. Writing a Rust crate to generate test csv (In Progress) (11/8/2024)

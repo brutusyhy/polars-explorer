@@ -3,7 +3,7 @@ use crate::State::Key;
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use std::sync::Mutex;
-
+use polars::prelude::LazyFrame;
 // Each LoadedFrame keeps a FrameViewManager
 // Which is responsible for handling FrameViews
 
@@ -27,9 +27,12 @@ impl FrameViewManager {
         *key
     }
 
-    // Passing references all the way is too complicated
-    // pub(crate) fn get_view(&self, view_key: usize) -> &FrameView {
-    //     self.store.lock().unwrap()
-    //         .get(&view_key).unwrap()
-    // }
+    // Why don't I directly provide a method to add a lazyframe?
+
+    pub(crate) fn add_lazyframe(&mut self, frame: LazyFrame, name: String, page_size: usize) -> usize {
+        let key = &self.next_key.fetch_add(1, Ordering::Relaxed);
+        let view = FrameView::new(*key, name, frame, page_size);
+        &self.view_map.lock().unwrap().insert(*key, view);
+        *key
+    }
 }

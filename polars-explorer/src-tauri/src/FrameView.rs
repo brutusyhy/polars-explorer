@@ -1,5 +1,5 @@
-use crate::Payload::{DataFrameInfo, DataInfo, JSONValue, PageInfo, ViewResponse};
-use crate::Query::{get_cols, get_rows};
+use crate::Payload::{DataFrameInfo, DataInfo, DataJSON, PageInfo, QueryInfo, ViewResponse};
+use crate::LazyFrame::{get_cols, get_rows};
 use polars::prelude::{IdxSize, LazyFrame};
 use serde::Serialize;
 use std::sync::Mutex;
@@ -16,6 +16,7 @@ pub(crate) struct DataViewInfo {
     pub(crate) name: String,
     pub(crate) rows: usize,
     pub(crate) cols: usize,
+    pub(crate) queryInfo: QueryInfo,
     // For now, it looks like there's no need to cache column info
     // Since transmitted payload will always contain column info
     // pub(crate) cols_info: Vec<ColumnInfo>
@@ -25,7 +26,7 @@ pub(crate) struct FrameView {
     pub(crate) frame: LazyFrame,          // A LazyFrame with queued queries
     pub(crate) info: Mutex<DataViewInfo>, // We expect each FrameView to be immutable
     pub(crate) page_info: Mutex<PageInfo>,
-    pub(crate) description: String, // Result of describe_plan_tree
+
 }
 
 impl FrameView {
@@ -33,11 +34,13 @@ impl FrameView {
     pub(crate) fn new(key: usize, name: String, frame: LazyFrame, pageSize: usize) -> Self {
         let rows = get_rows(frame.clone()).unwrap();
         let cols = get_cols(frame.clone()).unwrap();
+        let queryInfo = QueryInfo { plan: frame.describe_plan().unwrap() };
         let info = DataViewInfo {
             key,
             name,
             rows,
             cols,
+            queryInfo,
         };
         let totalPage = rows.div_ceil(pageSize);
         let page_info = PageInfo {
@@ -45,13 +48,12 @@ impl FrameView {
             currentPage: 0,
             totalPage,
         };
-        let description = frame.describe_plan().unwrap();
+        let plan = frame.describe_plan().unwrap();
 
         Self {
             frame,
             info: Mutex::new(info),
             page_info: Mutex::new(page_info),
-            description,
         }
     }
 

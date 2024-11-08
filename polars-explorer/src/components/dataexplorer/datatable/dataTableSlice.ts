@@ -24,5 +24,10 @@ export const dataTableSlice = createSlice({
 export const {loadData} = dataTableSlice.actions;
 
 export const selectData = (state: RootState) => state.dataTable.data;
+export const selectColumnInfo = (state: RootState) => {
+    return state.dataTable.data.map(col => {
+        return {name: col.name, datatype: col.datatype}
+    })
+}
 
 export default dataTableSlice.reducer;

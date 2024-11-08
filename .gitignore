@@ -1,3 +1,5 @@
 
 /.idea
 /polars-explorer/.vscode
+/polars-explorer/polars-playground/target
+/polars-explorer/src-tauri/test-csv-generator/target

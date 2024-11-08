@@ -18,21 +18,6 @@ export async function open_csv({pageSize}: { pageSize: number }) {
     });
 }
 
-
-export async function switch_dataframe({frameKey, pageSize}: { frameKey: number, pageSize: number }) {
-    const {infoChannel, dataChannel, pageChannel} = createChannels();
-    console.log(`Switch to Dataframe #${frameKey}`);
-    await invoke("switch_view", {
-        frameKey,
-        viewKey: 0, // Query base view
-        page: 0,
-        pageSize,
-        infoChannel,
-        dataChannel,
-        pageChannel
-    })
-}
-
 export async function switch_view({frameKey, viewKey, pageSize}: {
     frameKey: number,
     viewKey: number,
@@ -64,6 +49,26 @@ export async function turn_page({frameKey, viewKey, page, pageSize}: {
         viewKey,
         page,
         pageSize,
+        infoChannel,
+        dataChannel,
+        pageChannel
+    })
+}
+
+export async function select_columns({frameKey, viewKey, pageSize, columns}: {
+    frameKey: number,
+    viewKey: number,
+    pageSize: number,
+    columns: string[]
+}) {
+    const {infoChannel, dataChannel, pageChannel} = createChannels();
+    console.log(`Select columns ${columns}`);
+    const columnJson = JSON.stringify(columns);
+    await invoke("select_columns", {
+        frameKey,
+        viewKey,
+        pageSize,
+        columnJson,
         infoChannel,
         dataChannel,
         pageChannel

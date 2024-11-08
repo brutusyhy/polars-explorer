@@ -24,3 +24,10 @@ To run this app in dev mode, run `pnpm install` to install dependencies.
 
 Then, run `pnpm tauri dev`. It utilizes vite to monitor real-time changes to code, and recompile Rust/hot reload React
 code accordingly.
+
+## Test CSV
+
+/src-tauri/test-csv-generator is a tool that can generate different kinds of testing csv to check how well the app can
+handle them
+
+The scope of testing will be expanded in the future.

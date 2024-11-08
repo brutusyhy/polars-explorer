@@ -1,6 +1,6 @@
-import {DataChannel, DataInfo, InfoChannel, JSONValue, PageChannel, PageInfo} from "@/Typing.ts";
+import {DataChannel, DataInfo, InfoChannel, DataJSON, PageChannel, PageInfo} from "@/Typing.ts";
 import {Channel} from "@tauri-apps/api/core";
-import {loadView} from "@/components/dataframe/dataFrameSlice.ts";
+import {loadView} from "@/components/frameview/frameViewSlice.ts";
 import {loadData} from "@/components/dataexplorer/datatable/dataTableSlice.ts";
 import {setPagination} from "@/components/dataexplorer/pagination/paginationSlice.ts";
 import {store} from "@/redux/store.ts";
@@ -16,28 +16,28 @@ import {store} from "@/redux/store.ts";
 function createChannelsThunk(dispatch, getState) {
     console.log("Channels initiated");
 
-    // Initialize channels only once and persist them across renders
+    // All channels are transient
+    // They need to be recreated before every communication
     let infoChannel: InfoChannel = new Channel<DataInfo>();
-    let dataChannel: DataChannel = new Channel<JSONValue>();
+    let dataChannel: DataChannel = new Channel<DataJSON>();
     let pageChannel: PageChannel = new Channel<PageInfo>();
 
 
     infoChannel.onmessage = (message: DataInfo) => {
         console.log("InfoChannel Message")
-        console.log(message.frameInfo)
-        console.log(message.viewInfo)
+        //console.log(message.frameInfo)
+        //console.log(message.viewInfo)
         dispatch(loadView(message));
-        // TODO make this work
     };
 
-    dataChannel.onmessage = (message: JSONValue) => {
+    dataChannel.onmessage = (message: DataJSON) => {
         console.log("DataChannel Message")
         dispatch(loadData(message.columns));
     };
 
     pageChannel.onmessage = (message: PageInfo) => {
         console.log("PageChannel Message")
-        console.log(message)
+        //console.log(message)
         dispatch(setPagination(message));
     };
     return {

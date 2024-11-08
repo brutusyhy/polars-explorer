@@ -1,0 +1,18 @@
+[package]
+name = "polars-playground"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+polars = { version = "0.44.2", features = ["lazy", "csv"] }
+serde_json = "1.0.132"
+
+
+# Try to improve compilation speed
+[build]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+incremental = true
+
+[profile.dev]
+opt-level = 0
+overflow-checks = false     # Disable integer overflow checks.

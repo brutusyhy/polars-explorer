@@ -4,7 +4,7 @@ use crate::LoadedFrame::LoadedFrame;
 use crate::State::LoadedFrameManager;
 use polars::prelude::*;
 use tauri::State;
-
+use crate::Query::{column_selector, JSONArray};
 // Open_csv will always load a new DataFrame
 // We have to name the arguments this way due to Tauri limitation
 
@@ -71,4 +71,23 @@ pub fn turn_page(
 ) -> Result<(), String> {
     let response = state.query_page(frameKey, viewKey, page);
     response.send(infoChannel, dataChannel, pageChannel)
+}
+
+#[tauri::command]
+pub fn select_columns(
+    frameKey: usize,
+    viewKey: usize,
+    pageSize: usize,
+    columnJSON: JSONArray,
+    infoChannel: InfoChannel,
+    dataChannel: DataChannel,
+    pageChannel: PageChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    let selector = column_selector(columnJSON)?;
+    let response = state.select_columns(frameKey, viewKey, pageSize, selector);
+    match response.send(infoChannel, dataChannel, pageChannel) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
 }

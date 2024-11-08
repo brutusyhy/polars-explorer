@@ -2,7 +2,7 @@ import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components
 import DataTable from "@/components/dataexplorer/DataTable.tsx";
 import PaginationControl from "@/components/dataexplorer/PaginationControl.tsx";
 
-export default function DataViewPanel() {
+export default function DataExplorerPanel() {
 
     return (
         <ResizablePanel defaultSize={60}>

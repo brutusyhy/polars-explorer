@@ -2,7 +2,7 @@ use crate::Channels::{DataChannel, InfoChannel, PageChannel};
 use crate::FrameView::DataViewInfo;
 use serde::Serialize;
 
-pub type JSONValue = serde_json::Value;
+pub type DataJSON = serde_json::Value;
 
 #[derive(Clone, Serialize)]
 pub struct PageInfo {
@@ -18,15 +18,23 @@ pub struct DataFrameInfo {
 }
 
 pub struct ViewResponse {
-    pub data: JSONValue,
+    pub data: DataJSON,
     pub pageInfo: PageInfo,
     pub viewInfo: DataViewInfo,
+}
+
+#[derive(Clone, Serialize)]
+pub struct QueryInfo {
+    pub plan: String,
 }
 
 #[derive(Clone, Serialize)]
 pub struct DataInfo {
     pub frameInfo: DataFrameInfo,
     pub viewInfo: DataViewInfo,
+    // I don't want to create another channel for query
+    // Let's just place it here
+
 }
 
 pub struct FullResponse {

@@ -3,8 +3,8 @@ import "./App.css";
 
 import Menu from "@/components/Menu.tsx";
 import {ResizableHandle, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
-import DataFramePanel from "@/components/DataFramePanel.tsx";
-import DataViewPanel from "@/components/DataViewPanel.tsx";
+import FrameViewPanel from "@/components/FrameViewPanel.tsx";
+import DataExplorerPanel from "@/components/DataExplorerPanel.tsx";
 import QueryPanel from "@/components/QueryPanel.tsx";
 
 
@@ -31,12 +31,12 @@ function App() {
             <Menu/>
             <ResizablePanelGroup direction="horizontal">
                 {/* Left Panel: DataFramePanel */}
-                <DataFramePanel/>
+                <FrameViewPanel/>
                 <ResizableHandle withHandle/>
 
                 {/* Middle Panel: DataviewPanel*/}
                 {/* TODO: We are now passing `data`, but it actually should be based on DataFrame states */}
-                <DataViewPanel/>
+                <DataExplorerPanel/>
                 <ResizableHandle withHandle/>
 
                 {/* Right Panel: Query History and Query Crafter*/}

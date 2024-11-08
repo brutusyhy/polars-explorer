@@ -1,7 +1,7 @@
 use crate::FrameView::FrameView;
 use crate::FrameViewManager::FrameViewManager;
 use crate::Payload::{DataFrameInfo, PageInfo, ViewResponse};
-use crate::Query::get_rows;
+use crate::LazyFrame::get_rows;
 use crate::State::LoadedFrameManager;
 use polars::prelude::{IdxSize, LazyFrame};
 use std::sync::atomic::Ordering;
