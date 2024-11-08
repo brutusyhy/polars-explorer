@@ -1,0 +1,10 @@
+[package]
+name = "test-csv-generator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fake = { version = "3.0.1", features = ["dummy", "derive"] }
+rand = "0.9.0-alpha.2"
+struct_iterable = "0.1.1"
+serde = { version = "1.0.214", features = ["derive"] }

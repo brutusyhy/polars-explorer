@@ -1,4 +1,4 @@
-import {createSlice, current, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {PageInfo} from "@/Typing.ts";
 import {RootState} from "@/redux/store.ts";
 
@@ -21,9 +21,9 @@ export const paginationSlice = createSlice({
             state.totalPage = newPage.totalPage;
             state.currentPage = newPage.currentPage;
             console.log(`Action payload:`)
-            console.log(newPage)
+            //console.log(newPage)
             console.log(`Current state:`)
-            console.log(current(state))
+            //console.log(current(state))
         }
     }
 })

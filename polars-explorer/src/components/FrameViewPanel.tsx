@@ -1,20 +1,18 @@
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
-import DataFrameList from "@/components/dataframe/DataFrameList.tsx";
+import FrameViewTree from "@/components/frameview/FrameViewTree.tsx";
+import FrameViewInfo from "@/components/frameview/FrameViewInfo.tsx";
 
 
-export default function DataFramePanel() {
+export default function FrameViewPanel() {
     return (
         <ResizablePanel defaultSize={20}>
             <ResizablePanelGroup direction="vertical">
-                <ResizablePanel defaultSize={50}>
-                    {/* Prop drilling for now...I know */}
-                    <DataFrameList/>
+                <ResizablePanel defaultSize={50} className="!overflow-y-scroll !overflow-x-scroll">
+                    <FrameViewTree/>
                 </ResizablePanel>
                 <ResizableHandle withHandle/>
                 <ResizablePanel defaultSize={50}>
-                    {/* TODO */}
-                    {/* Maybe better to use this panel to display dataframe info? */}
-                    <div>DataFrame Info</div>
+                    <FrameViewInfo/>
                 </ResizablePanel>
             </ResizablePanelGroup>
         </ResizablePanel>

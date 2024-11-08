@@ -16,11 +16,11 @@ export type Schema = ColumnInfo[];
 export type TableData = ColumnData[];
 
 // JSON load from the backend
-export type JSONValue = {
+export type DataJSON = {
     columns: ColumnData[]
 }
 
-export type DataChannel = Channel<JSONValue>;
+export type DataChannel = Channel<DataJSON>;
 
 // Key associated with each DataFrame
 export type Key = number;
@@ -31,11 +31,16 @@ export type DataFrameInfo = {
     length: number,
 }
 
+export type QueryInfo = {
+    plan: string
+}
+
 export type DataViewInfo = {
-    name: String,
+    name: string,
     key: number,
     rows: number,
-    cols: number
+    cols: number,
+    queryInfo: QueryInfo
 }
 
 export type DataInfo = {
@@ -71,3 +76,7 @@ export type PageInfo = {
 }
 
 export type PageChannel = Channel<PageInfo>;
+
+// This type is used to pass an array from the frontend to the backend
+// It should be a serialized Array in JSON format
+export type JSONArray = string;

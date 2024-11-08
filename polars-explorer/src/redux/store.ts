@@ -1,7 +1,7 @@
 // https://react-redux.js.org/tutorials/typescript-quick-start
 
 import {configureStore} from '@reduxjs/toolkit'
-import dataFrameReducer from '@/components/dataframe/dataFrameSlice.ts'
+import dataFrameReducer from '@/components/frameview/frameViewSlice.ts'
 import dataTableReducer from "@/components/dataexplorer/datatable/dataTableSlice.ts";
 import paginationReducer from "@/components/dataexplorer/pagination/paginationSlice.ts"
 

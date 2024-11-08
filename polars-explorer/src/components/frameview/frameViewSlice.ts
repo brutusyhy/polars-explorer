@@ -10,18 +10,20 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "@/redux/store.ts";
 
 interface DataFrameState {
-    dataFrameMap: DataFrameMap,
+    dataFrameMap: DataFrameMap
     frameViewMap: FrameViewMap
-    openedView: FrameViewKey
+    openedFrameViewKey: FrameViewKey
+    queryPlan: string
 }
 
 const initialState: DataFrameState = {
     dataFrameMap: {},
     frameViewMap: {},
-    openedView: [-1, -1]
+    openedFrameViewKey: [-1, -1],
+    queryPlan: ""
 }
 
-export const dataFrameSlice = createSlice({
+export const frameViewSlice = createSlice({
     name: "dataFrame",
     initialState,
     reducers: {
@@ -43,17 +45,33 @@ export const dataFrameSlice = createSlice({
                 // Add the view to the frameViewMap
                 state.frameViewMap[frameKey][viewKey] = viewInfo;
             }
-            state.openedView = [frameKey, viewKey];
-
+            state.openedFrameViewKey = [frameKey, viewKey];
+            state.queryPlan = viewInfo.queryInfo.plan;
         },
 
 
     }
 })
-export const {loadView} = dataFrameSlice.actions;
+export const {loadView} = frameViewSlice.actions;
 export const selectDataFrameMap = (state: RootState) => state.dataFrame.dataFrameMap;
 export const selectFrameViewMap = (state: RootState) => state.dataFrame.frameViewMap;
-export const selectOpenedView = (state: RootState) => state.dataFrame.openedView;
+export const selectOpenedFrameViewKey = (state: RootState) => state.dataFrame.openedFrameViewKey;
+export const selectOpenedViewInfo = (state: RootState) => {
+    const [frameKey, viewKey] = state.dataFrame.openedFrameViewKey;
+    if (frameKey === -1) {
+        return undefined;
+    }
+    return state.dataFrame.frameViewMap[frameKey][viewKey];
+}
 
+export const selectOpenedFrameInfo = (state: RootState) => {
+    const frameKey = state.dataFrame.openedFrameViewKey[0];
+    if (frameKey === -1) {
+        return undefined;
+    }
+    return state.dataFrame.dataFrameMap[frameKey];
+}
 
-export default dataFrameSlice.reducer;
+export const selectQueryPlan = (state: RootState) => state.dataFrame.queryPlan
+
+export default frameViewSlice.reducer;

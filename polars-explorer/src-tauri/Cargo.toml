@@ -1,9 +1,9 @@
 [package]
 name = "polars-explorer"
-version = "0.1.0"
-description = "A Tauri App"
+version = "0.2.0"
+description = "A Data Explorer for Rust Polars"
 authors = ["you"]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -32,5 +32,5 @@ rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 incremental = true
 
 [profile.dev]
-opt-level = 0               # Use slightly better optimizations.
+opt-level = 0
 overflow-checks = false     # Disable integer overflow checks.
