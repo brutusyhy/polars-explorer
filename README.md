@@ -20,7 +20,7 @@ Right now, this project is largely at its inception, and any feedback/advice/hel
 
 This project is scaffolded using `pnpm create tauri-app` with React and TypeScript.
 
-To run this app in dev mode, run `pnpm install` to install dependencies.
+To run this app in dev mode, first `cd polars-explorer`. Then, run `pnpm install` to install dependencies.
 
-Then, run `pnpm tauri dev`. It utilizes vite to monitor real-time changes to code, and recompile Rust/hot reload React
+After that, run `pnpm tauri dev`. It utilizes vite to monitor real-time changes to code, and recompile Rust/hot reload React
 code accordingly.
