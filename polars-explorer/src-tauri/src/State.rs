@@ -5,6 +5,11 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::Mutex;
 use polars::prelude::Expr;
 
+
+// Thanks to https://www.reddit.com/user/epostma/ for pointing this out:
+// When we have a Mutex lock over frame_map, there would only be an exclusive access to everything beneath it
+// Especially since all commands go through the state
+// Thus, we can safely remove all lower level locks
 pub type Key = AtomicUsize;
 pub(crate) struct LoadedFrameManager {
     // A Tauri managed state keeping track of all in-memory lazyframes
@@ -43,7 +48,7 @@ impl LoadedFrameManager {
             .view_manager.lock().unwrap()
             .view_map.lock().unwrap()
             .get_mut(&view_key).unwrap()
-            .to_page(page);
+            .turn_page(page);
         self.query_view(frame_key, view_key)
     }
 
@@ -77,4 +82,15 @@ impl LoadedFrameManager {
         // Finally, we will treat this as yet another view query
         self.query_view(frame_key, new_viewkey)
     }
+
+    // TODO: Context Menu
+    // pub fn rename_view(&mut self,
+    //                    frame_key: usize,
+    //                    view_key: usize
+    //                    , name: String) {}
+    //
+    // // Experiment with getting a reusable function to extract nested mutex
+    // pub fn get_frame_map_guard(&self) {
+    //     self.frame_map.lock()
+    // }
 }

@@ -62,7 +62,7 @@ impl FrameView {
         Self::new(0, "Base".to_string(), frame, 20)
     }
 
-    pub(crate) fn to_page(&mut self, page: usize) -> &mut FrameView {
+    pub(crate) fn turn_page(&mut self, page: usize) -> &mut FrameView {
         // Turn the view to a given page
         let pageSize = self.page_info.lock().unwrap().pageSize;
         let totalPage = self.page_info.lock().unwrap().totalPage;
@@ -72,6 +72,16 @@ impl FrameView {
             totalPage,
         };
         *self.page_info.lock().unwrap() = page_info;
+        self
+    }
+
+    pub(crate) fn rename(&mut self, name: String) -> &mut FrameView {
+        let oldInfo = self.info.lock().unwrap().clone();
+        let info = DataViewInfo {
+            name,
+            ..oldInfo
+        };
+        *self.info.lock().unwrap() = info;
         self
     }
 

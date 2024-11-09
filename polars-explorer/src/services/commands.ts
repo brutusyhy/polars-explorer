@@ -74,3 +74,15 @@ export async function select_columns({frameKey, viewKey, pageSize, columns}: {
         pageChannel
     })
 }
+
+// TODO: Context Menu
+// export async function rename_view({frameKey, viewKey, name}: {
+//     frameKey: number,
+//     viewKey: number,
+//     name: string
+// }) {
+//     // Does rename actually need any feedback? Hmmm
+//     // Better not. Unnecessarily complicated and no practical significance.
+//     console.log(`Renaming view ${frameKey}-${viewKey}`);
+//
+// }

@@ -3,7 +3,7 @@ import {switch_view} from "@/services/commands.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
 import {selectPageSize} from "@/components/dataexplorer/pagination/paginationSlice.ts";
 
-export default function FrameView({frameKey, viewKey, name}: { frameKey: number, viewKey: number, name: string }) {
+export default function ViewTreeItem({frameKey, viewKey, name}: { frameKey: number, viewKey: number, name: string }) {
     const pageSize = useAppSelector(selectPageSize);
     return <TreeItem
         onClick={async () => {

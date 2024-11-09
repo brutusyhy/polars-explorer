@@ -5,6 +5,15 @@ use crate::State::LoadedFrameManager;
 use polars::prelude::*;
 use tauri::State;
 use crate::Query::{column_selector, JSONArray};
+
+// A normal command flow:
+// Command -> State -> Specific
+// eg. switch_view -> state.query_view
+// This is because states are wrapped in a Mutex
+// This makes passing reference difficult
+// And passing ownership won't make sense either
+
+
 // Open_csv will always load a new DataFrame
 // We have to name the arguments this way due to Tauri limitation
 
@@ -91,3 +100,13 @@ pub fn select_columns(
         Err(e) => Err(e.to_string()),
     }
 }
+
+// TODO: Context Menu
+// #[tauri::command]
+// pub fn rename_view(
+//     frameKey: usize,
+//     viewKey: usize,
+//     name: String,
+//     infoChannel: InfoChannel,
+//     state: State<LoadedFrameManager>,
+// ) -> Result<(), String> {}
