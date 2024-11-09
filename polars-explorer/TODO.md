@@ -33,17 +33,28 @@ This would ensure optimal performance, especially for huge datasets.
 
 - [x] a. Fix Data Table's horizontal scrolling (11/4/2024)
 
-- [ ] b. Implement DataFrame panel
+- [x] b. Implement DataFrame panel (11/9/2024)
     - [x] i. Loading a new DataFrame should create a new item (11/4/2024)
     - [x] ii. The user should be able to choose between dataframes (11/5/2024)
-    - [ ] iii. The user should be able to rename and delete dataframe/views
-    - [x] iv. Change the component into a tree view (11/8/2024)
-
+    - [x] iii. Change the component into a tree view (11/8/2024)
+    - [x] iv. When creating a new view, automatically selects it in the tree view
+    - [x] v. Change manual click event to MUI's selectItem (11/9/2024)
 
 - [x] c. Implement FrameView info panel (11/8/2024)
     - [x] i. The info panel will show basic FrameView information (11/8/2024)
     - [x] ii. It will show the list of columns and their datatypes (11/8/2024)
     - [x] iii. It allows easy selection of columns (11/8/2024)
+    - [ ] iv. Default select all columns in the column selector
+
+- [ ] d. Implement FrameContext menu
+    - [ ] i. Rename Frame
+    - [ ] ii. Delete Frame
+
+- [ ] e. Implement ViewContext menu
+    - [ ] i. Rename View
+    - [ ] ii. Delete View
+    - [ ] iii. Turn Into Frame
+    - [ ] iv. Export
 
 ### 3. Paginated query
 
@@ -51,7 +62,8 @@ This would ensure optimal performance, especially for huge datasets.
 - [ ] b. Implement PageInfo Control on the frontend
     - [x] i. The controls should update using the pageInfo info (11/8/2024)
     - [x] ii. Each action made on the controls should initiate a query (11/8/2024)
-    - [ ] iii. The user should be able to change page size
+    - [x] iii. The user can turn to desired page (11/9/2024)
+    - [ ] iv. The user should be able to change page size
 
 ### 4. State Management
 
@@ -73,8 +85,8 @@ This would ensure optimal performance, especially for huge datasets.
 - [x] b. Extract Typing information in Rust and TypeScript (11/4/2024)
 
 - [x] c. Set up separate hooks and services on the frontend to handle different tasks: (11/4/2024)
-    - [x] i. DataFrame List and Selection ((Removed)DataFrame.ts)
-    - [x] ii. Updating Dataview and PageInfo based on query results ((Removed)DataView.ts)
+    - [x] i. DataFrame/View List and Selection (FrameViewPanel.tsx)
+    - [x] ii. Updating Dataview and PageInfo based on query results
     - [x] iii. Communicating with the backend (commands.ts)
 
 - [x] d. Extract the communication channels from the main app (11/4/2024)
@@ -92,7 +104,8 @@ This would ensure optimal performance, especially for huge datasets.
 - [x] h. Modularize Rust backend (11/5/2024)
 
 - [ ] i. Refactor backend state management to use Manager trait
--
+
+- [ ] j. Refactor the layered structure and use of Mutex
 
 ### 6. Data Exploration
 
