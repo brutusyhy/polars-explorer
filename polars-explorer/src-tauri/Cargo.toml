@@ -3,7 +3,7 @@ name = "polars-explorer"
 version = "0.2.0"
 description = "A Data Explorer for Rust Polars"
 authors = ["you"]
-edition = "2024"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
