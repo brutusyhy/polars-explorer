@@ -43,7 +43,7 @@ export default function DataTable() {
                 ))}
                 </tbody>
             </table>
-
+        
         </div>
 
     )

@@ -11,7 +11,7 @@ export default function FrameViewPanel() {
                     <FrameViewTree/>
                 </ResizablePanel>
                 <ResizableHandle withHandle/>
-                <ResizablePanel defaultSize={50}>
+                <ResizablePanel defaultSize={50} className="!overflow-y-scroll !overflow-x-scroll">
                     <FrameViewInfo/>
                 </ResizablePanel>
             </ResizablePanelGroup>
