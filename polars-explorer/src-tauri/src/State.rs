@@ -28,14 +28,9 @@ impl LoadedFrameManager {
 
         let viewResponse = self.frame_map.lock().unwrap()
             .get(&frame_key).unwrap()
-            .view_manager
-            .view_map
-            .get(&view_key).unwrap()
-            .query();
+            .view_manager.query_view(view_key);
 
-        let frameInfo = self.frame_map.lock().unwrap()
-            .get(&frame_key).unwrap()
-            .frameInfo.to_owned();
+        let frameInfo = self.get_frame_info(frame_key);
 
         FullResponse {
             view: viewResponse,
@@ -46,10 +41,8 @@ impl LoadedFrameManager {
         // A helper function to first turn the frame to the desired page
         self.frame_map.lock().unwrap()
             .get_mut(&frame_key).unwrap()
-            .view_manager
-            .view_map
-            .get_mut(&view_key).unwrap()
-            .turn_page(page);
+            .view_manager.turn_page(view_key, page);
+
         self.query_view(frame_key, view_key)
     }
 
@@ -62,16 +55,14 @@ impl LoadedFrameManager {
         // And a new FrameView under the same LoadedFrame
         let col_count = column_selector.len();
         // First, clone the existing LazyFrame
-        let lf =
+        let lazy_frame =
             self.frame_map.lock().unwrap()
                 .get(&frame_key).unwrap()
                 .view_manager
-                .view_map
-                .get(&view_key).unwrap()
-                .frame.to_owned();
+                .get_lazyframe(view_key);
 
         // Then, apply select on the lazyframe
-        let frame = lf.select(column_selector);
+        let frame = lazy_frame.select(column_selector);
 
         // Thereafter, we will use view_manager to load the lazyframe
         let new_viewkey =
@@ -84,10 +75,6 @@ impl LoadedFrameManager {
         self.query_view(frame_key, new_viewkey)
     }
 
-    pub fn delete_frame(&self, frame_key: usize) {
-        self.frame_map.lock().unwrap().remove(&frame_key);
-    }
-
     pub fn get_frame_info(&self, frame_key: usize) -> DataFrameInfo {
         self.frame_map.lock().unwrap()
             .get(&frame_key).unwrap()
@@ -97,16 +84,19 @@ impl LoadedFrameManager {
     pub fn get_view_info(&self, frame_key: usize, view_key: usize) -> DataViewInfo {
         self.frame_map.lock().unwrap()
             .get(&frame_key).unwrap()
-            .view_manager
-            .view_map
-            .get(&view_key).unwrap()
-            .info.clone()
+            .view_manager.get_view_info(view_key)
     }
-
-
+    pub fn delete_frame(&self, frame_key: usize) {
+        self.frame_map.lock().unwrap().remove(&frame_key);
+    }
     pub fn rename_frame(&self, frame_key: usize, name: String) {
         self.frame_map.lock().unwrap()
             .get_mut(&frame_key).unwrap()
             .frameInfo.name = name;
+    }
+    pub fn delete_view(&self, frame_key: usize, view_key: usize) {
+        self.frame_map.lock().unwrap()
+            .get_mut(&frame_key).unwrap()
+            .view_manager.delete(view_key)
     }
 }

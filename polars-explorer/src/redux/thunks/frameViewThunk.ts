@@ -1,6 +1,6 @@
 // TODO: Review this approach of using thunk function in commands
 import {frameViewSlice} from "@/redux/slices/frameViewSlice.ts";
-import {store} from "@/redux/store.ts";
+import {RootState, store} from "@/redux/store.ts";
 
 
 // A thunk function that allows commands to access and affect Redux states
@@ -23,3 +23,20 @@ function renameFrameThunk(frameKey: number, name: string) {
 }
 
 export const renameFrameCommand = (frameKey: number, name: string) => store.dispatch(renameFrameThunk(frameKey, name));
+
+function deleteViewThunk(frameKey: number, viewKey: number) {
+    return (dispatch, getState) => {
+        dispatch(frameViewSlice.actions.deleteView([frameKey, viewKey]))
+    }
+}
+
+export const deleteViewCommand = (frameKey: number, viewKey: number) => store.dispatch(deleteViewThunk(frameKey, viewKey));
+
+
+function getOpenedFrameViewKeyThunk() {
+    return (dispatch, getState: () => RootState) => {
+        return getState().dataFrame.openedFrameViewKey;
+    }
+}
+
+export const getOpenedFrameViewKeyCommand = () => store.dispatch(getOpenedFrameViewKeyThunk())

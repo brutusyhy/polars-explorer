@@ -12,13 +12,12 @@ export default function NextPage() {
     const currentPage = useAppSelector(selectCurrentPage);
     const pageSize = useAppSelector(selectPageSize);
     const totalPage = useAppSelector(selectTotalPage);
-    const [frameKey, viewKey] = useAppSelector(selectOpenedFrameViewKey)
 
     if (currentPage + 1 < totalPage) {
         return (
             <PaginationItem>
                 <PaginationNext onClick={async () => {
-                    await turn_page({frameKey, viewKey, page: currentPage + 1, pageSize});
+                    await turn_page({page: currentPage + 1, pageSize});
                 }} className="btn"/>
             </PaginationItem>
         );

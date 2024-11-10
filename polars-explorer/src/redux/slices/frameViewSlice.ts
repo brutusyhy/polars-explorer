@@ -67,6 +67,17 @@ export const frameViewSlice = createSlice({
             const [frameKey, name] = action.payload;
             state.dataFrameMap[frameKey].name = name;
         },
+        deleteView: (state, action: PayloadAction<[number, number]>) => {
+            const [frameKey, viewKey] = action.payload;
+            // 1. Delete view from frameViewMap
+            delete state.frameViewMap[frameKey][viewKey];
+            // 2. If the view is currently opened, reset the currently opened frameViewKey
+            const [openedFrameKey, openedViewKey] = state.openedFrameViewKey;
+            if (frameKey === openedFrameKey && viewKey === openedViewKey) {
+                state.openedFrameViewKey = [-1, -1]
+            }
+        },
+
         clearQueryPlan: (state) => {
             state.queryPlan = "";
         }

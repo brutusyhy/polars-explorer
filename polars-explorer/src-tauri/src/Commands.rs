@@ -102,31 +102,20 @@ pub fn select_columns(
     }
 }
 
-// TODO: Context Menu
-// #[tauri::command]
-// pub fn rename_view(
-//     frameKey: usize,
-//     viewKey: usize,
-//     name: String,
-//     infoChannel: InfoChannel,
-//     state: State<LoadedFrameManager>,
-// ) -> Result<(), String> {}
-
-
 #[tauri::command]
 pub fn delete_frame(
-    frameKeyToDelete: usize,
+    frameKey: usize,
     currentFrameKey: usize,
     clearChannel: ClearChannel,
     state: State<LoadedFrameManager>,
 ) -> Result<(), String> {
     // 1. We first delete the target frame
-    state.delete_frame(frameKeyToDelete);
+    state.delete_frame(frameKey);
 
     // 2. Check if we deleted the currentFrame
     // If so, the ui will be cleared
     // Otherwise, the ui should not change
-    if frameKeyToDelete == currentFrameKey {
+    if frameKey == currentFrameKey {
         Ok(clearChannel.send(true).unwrap())
     } else {
         Ok(())
@@ -147,3 +136,24 @@ pub fn rename_frame(
     Ok(())
 }
 
+#[tauri::command]
+pub fn delete_view(
+    frameKey: usize,
+    viewKey: usize,
+    currentFrameKey: usize,
+    currentViewKey: usize,
+    clearChannel: ClearChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    // 1. We first delete the target frame
+    state.delete_view(frameKey, viewKey);
+
+    // 2. Check if we deleted the currentView
+    // If so, the ui will be cleared
+    // Otherwise, the ui should not change
+    if frameKey == currentFrameKey && currentViewKey == viewKey {
+        Ok(clearChannel.send(true).unwrap())
+    } else {
+        Ok(())
+    }
+}

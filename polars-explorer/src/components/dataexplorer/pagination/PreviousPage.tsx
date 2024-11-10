@@ -10,13 +10,12 @@ import {turn_page} from "@/services/commands.ts";
 export default function PreviousPage() {
     const currentPage = useAppSelector(selectCurrentPage);
     const pageSize = useAppSelector(selectPageSize);
-    const [frameKey, viewKey] = useAppSelector(selectOpenedFrameViewKey);
 
     if (currentPage >= 1) {
         return (
             <PaginationItem>
                 <PaginationPrevious onClick={async () => {
-                    await turn_page({frameKey, viewKey, page: currentPage - 1, pageSize});
+                    await turn_page({page: currentPage - 1, pageSize});
                 }} className="btn"/>
             </PaginationItem>
         );
