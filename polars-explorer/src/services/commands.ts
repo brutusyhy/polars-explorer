@@ -4,7 +4,7 @@
 import {invoke} from "@tauri-apps/api/core";
 import {createChannels} from "@/services/channels.ts";
 import {getOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
-import {deleteFrameCommand} from "@/redux/thunks/frameViewThunk.ts";
+import {deleteFrameCommand, renameFrameCommand} from "@/redux/thunks/frameViewThunk.ts";
 
 
 export async function open_csv({pageSize}: { pageSize: number }) {
@@ -90,6 +90,9 @@ export async function select_columns({frameKey, viewKey, pageSize, columns}: {
 // }
 
 // TODO: not ideal not ideal...
+// We are manually deleting frame from the treeon the frontend
+// Rather than relying on a passed message
+// But maybe it's acceptable?
 export async function delete_frame({frameKeyToDelete, currentFrameKey}: {
     frameKeyToDelete: number,
     currentFrameKey: number
@@ -104,9 +107,18 @@ export async function delete_frame({frameKeyToDelete, currentFrameKey}: {
     deleteFrameCommand(frameKeyToDelete)
 }
 
-// export async function delete_view({frameKeyToDelete, viewKeyToDelete, currentFrameKey, currentViewKey}: {
-//     const [currentFrameKey, cu]
-//     frameKeyToDelete: number,
-//     viewKeyToDelete: number,
-//     curr
-// })
+// Backend communication might still be useful?
+// In the future, we can allow backend to save its state to a file
+// Names can thus also be preserved.
+// TODO: Reconsider whether we should update the frontend with message
+export async function rename_frame({frameKey, name}: {
+    frameKey: number,
+    name: string,
+}) {
+    console.log(`Renaming frame ${frameKey} to ${name}`);
+    await invoke("rename_frame", {
+        frameKey,
+        name,
+    });
+    renameFrameCommand(frameKey, name);
+}

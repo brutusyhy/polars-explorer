@@ -4,4 +4,5 @@
 2. "Go to page" functionality with input validation
 3. Remove unnecessary mutex
 4. FrameItem Context Menu
-    - Remove Frame
+    - Delete Frame
+    - Rename Frame

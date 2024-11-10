@@ -23,6 +23,7 @@ pub fn run() {
             Commands::switch_view,
             Commands::select_columns,
             Commands::delete_frame,
+            Commands::rename_frame,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

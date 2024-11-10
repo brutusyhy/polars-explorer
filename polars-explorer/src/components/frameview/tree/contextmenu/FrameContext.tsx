@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/context-menu.tsx"
 import {ViewMap} from "@/Typing.ts";
 import FrameTreeItem from "@/components/frameview/tree/FrameTreeItem.tsx";
-import {delete_frame} from "@/services/commands.ts";
+import {delete_frame, rename_frame} from "@/services/commands.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
 import {selectOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
 
@@ -19,7 +19,18 @@ export default function FrameContext({frameKey, name, views}: { frameKey: number
                 <FrameTreeItem frameKey={frameKey} name={name} views={views}/>
             </ContextMenuTrigger>
             <ContextMenuContent>
-                <ContextMenuItem>Rename Frame</ContextMenuItem>
+                <ContextMenuItem onClick={
+                    async () => {
+                        let newName = prompt("New name for this frame:")
+                        while (!newName.trim()) {
+                            newName = prompt("Please enter a non-empty name:")
+                        }
+                        await rename_frame({
+                            frameKey,
+                            name: newName
+                        })
+                    }
+                }>Rename Frame</ContextMenuItem>
                 <ContextMenuItem onClick={
                     async () => {
                         await delete_frame({

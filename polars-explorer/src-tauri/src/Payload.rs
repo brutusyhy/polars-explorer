@@ -34,13 +34,18 @@ pub struct DataInfo {
     pub viewInfo: DataViewInfo,
     // I don't want to create another channel for query
     // Let's just place it here
-
+    // TODO: Maybe that was a bad idea
 }
+
 
 pub struct FullResponse {
     pub view: ViewResponse,
     pub frameInfo: DataFrameInfo,
 }
+
+// TODO: Right now, the transmitting of message is inconsistent
+// Not all messages have to be FullResponse, but using individual channels is not ideal
+// Maybe better refactor FullResponse to take optional fields
 
 impl FullResponse {
     pub fn send(

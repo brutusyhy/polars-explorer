@@ -4,6 +4,7 @@ use crate::LoadedFrame::LoadedFrame;
 use crate::State::LoadedFrameManager;
 use polars::prelude::*;
 use tauri::State;
+use crate::Payload::DataInfo;
 use crate::Query::{column_selector, JSONArray};
 
 // A normal command flow:
@@ -94,7 +95,7 @@ pub fn select_columns(
     state: State<LoadedFrameManager>,
 ) -> Result<(), String> {
     let selector = column_selector(columnJSON)?;
-    let response = state.select_columns(frameKey, viewKey, pageSize, selector);
+    let response = state.query_select_columns(frameKey, viewKey, pageSize, selector);
     match response.send(infoChannel, dataChannel, pageChannel) {
         Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
@@ -130,5 +131,19 @@ pub fn delete_frame(
     } else {
         Ok(())
     }
+}
+
+// TODO: Because we haven't split viewInfo from frameInfo
+// We need to update both at the same time...
+// But I also feel that refactoring is not worth it...?
+// We'd better refrain from refreshing the frontend with message at this step
+#[tauri::command]
+pub fn rename_frame(
+    frameKey: usize,
+    name: String,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    state.rename_frame(frameKey, name);
+    Ok(())
 }
 

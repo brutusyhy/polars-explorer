@@ -5,7 +5,7 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::Mutex;
 use polars::prelude::Expr;
 use polars::prelude::JoinType::Full;
-use crate::FrameView::DataViewInfo;
+use crate::FrameView::{DataViewInfo, FrameView};
 // Thanks to https://www.reddit.com/user/epostma/ for pointing this out:
 // When we have a Mutex lock over frame_map, there would only be an exclusive access to everything beneath it
 // Especially since all commands go through the state
@@ -19,6 +19,8 @@ pub(crate) struct LoadedFrameManager {
 }
 
 // I think it might be a good idea to put all the commands at this level?
+
+// query_xxx => returns a response
 
 impl LoadedFrameManager {
     pub fn query_view(&self, frame_key: usize, view_key: usize) -> FullResponse {
@@ -51,11 +53,11 @@ impl LoadedFrameManager {
         self.query_view(frame_key, view_key)
     }
 
-    pub fn select_columns(&self,
-                          frame_key: usize,
-                          view_key: usize,
-                          page_size: usize,
-                          column_selector: Vec<Expr>) -> FullResponse {
+    pub fn query_select_columns(&self,
+                                frame_key: usize,
+                                view_key: usize,
+                                page_size: usize,
+                                column_selector: Vec<Expr>) -> FullResponse {
         // Selecting columns should create a new lazyframe
         // And a new FrameView under the same LoadedFrame
         let col_count = column_selector.len();
@@ -82,18 +84,29 @@ impl LoadedFrameManager {
         self.query_view(frame_key, new_viewkey)
     }
 
-    // TODO: Context Menu
-    // pub fn rename_view(&mut self,
-    //                    frame_key: usize,
-    //                    view_key: usize
-    //                    , name: String) {}
-    //
-    // // Experiment with getting a reusable function to extract nested mutex
-    // pub fn get_frame_map_guard(&self) {
-    //     self.frame_map.lock()
-    // }
-
     pub fn delete_frame(&self, frame_key: usize) {
         self.frame_map.lock().unwrap().remove(&frame_key);
+    }
+
+    pub fn get_frame_info(&self, frame_key: usize) -> DataFrameInfo {
+        self.frame_map.lock().unwrap()
+            .get(&frame_key).unwrap()
+            .frameInfo.clone()
+    }
+
+    pub fn get_view_info(&self, frame_key: usize, view_key: usize) -> DataViewInfo {
+        self.frame_map.lock().unwrap()
+            .get(&frame_key).unwrap()
+            .view_manager
+            .view_map
+            .get(&view_key).unwrap()
+            .info.clone()
+    }
+
+
+    pub fn rename_frame(&self, frame_key: usize, name: String) {
+        self.frame_map.lock().unwrap()
+            .get_mut(&frame_key).unwrap()
+            .frameInfo.name = name;
     }
 }

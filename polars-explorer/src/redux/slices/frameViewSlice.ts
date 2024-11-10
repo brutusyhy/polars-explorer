@@ -63,6 +63,10 @@ export const frameViewSlice = createSlice({
                 state.openedFrameViewKey = [-1, -1]
             }
         },
+        renameFrame: (state, action: PayloadAction<[number, string]>) => {
+            const [frameKey, name] = action.payload;
+            state.dataFrameMap[frameKey].name = name;
+        },
         clearQueryPlan: (state) => {
             state.queryPlan = "";
         }
@@ -91,12 +95,6 @@ export const selectOpenedFrameInfo = (state: RootState) => {
 }
 
 export const selectQueryPlan = (state: RootState) => state.dataFrame.queryPlan
-
-// A thunk function that allows commands to delete a dataFrame
-// TODO: This is not ideal as it goes against my architecture design
-// In my design, the frontend should change as a result of message from the backend
-// Not mutating itself
-// But let's go with this approach for now
 
 
 // function deleteFrameThunk
