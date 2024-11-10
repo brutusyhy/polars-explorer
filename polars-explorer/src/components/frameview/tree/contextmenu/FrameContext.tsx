@@ -7,6 +7,7 @@ import {
 import {ViewMap} from "@/Typing.ts";
 import FrameTreeItem from "@/components/frameview/tree/FrameTreeItem.tsx";
 import {delete_frame, rename_frame} from "@/services/commands.ts";
+import RenameDialog from "@/components/frameview/tree/contextmenu/RenameDialog.ts";
 
 export default function FrameContext({frameKey, name, views}: { frameKey: number, name: string, views: ViewMap }) {
     return (
@@ -17,10 +18,7 @@ export default function FrameContext({frameKey, name, views}: { frameKey: number
             <ContextMenuContent>
                 <ContextMenuItem onClick={
                     async () => {
-                        let newName = prompt("New name for this frame:")
-                        while (!newName || !newName.trim()) {
-                            newName = prompt("Please enter a non-empty name:")
-                        }
+                        const newName = RenameDialog("frame");
                         await rename_frame({
                             frameKey,
                             name: newName

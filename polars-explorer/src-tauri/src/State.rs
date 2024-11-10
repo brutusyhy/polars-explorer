@@ -99,4 +99,9 @@ impl LoadedFrameManager {
             .get_mut(&frame_key).unwrap()
             .view_manager.delete(view_key)
     }
+    pub fn rename_view(&self, frame_key: usize, view_key: usize, name: String) {
+        self.frame_map.lock().unwrap()
+            .get_mut(&frame_key).unwrap()
+            .view_manager.rename(view_key, name);
+    }
 }

@@ -8,7 +8,7 @@ import {
     deleteFrameCommand,
     deleteViewCommand,
     getOpenedFrameViewKeyCommand,
-    renameFrameCommand
+    renameFrameCommand, renameViewCommand
 } from "@/redux/thunks/frameViewThunk.ts";
 
 
@@ -131,4 +131,18 @@ export async function delete_view({frameKey, viewKey}: {
         clearChannel
     })
     deleteViewCommand(frameKey, viewKey)
+}
+
+export async function rename_view({frameKey, viewKey, name}: {
+    frameKey: number,
+    viewKey: number
+    name: string,
+}) {
+    console.log(`Renaming view ${frameKey}-${viewKey} to ${name}`);
+    await invoke("rename_frame", {
+        frameKey,
+        viewKey,
+        name,
+    });
+    renameViewCommand(frameKey, viewKey, name);
 }

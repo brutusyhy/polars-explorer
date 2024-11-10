@@ -40,3 +40,13 @@ function getOpenedFrameViewKeyThunk() {
 }
 
 export const getOpenedFrameViewKeyCommand = () => store.dispatch(getOpenedFrameViewKeyThunk())
+
+function renameViewThunk(frameKey: number, viewKey: number, name: string) {
+    return (dispatch, getState) => {
+        dispatch(frameViewSlice.actions.renameView([frameKey, viewKey, name]))
+    }
+}
+
+export const renameViewCommand = (frameKey: number, viewKey: number, name: string) => {
+    store.dispatch(renameViewThunk(frameKey, viewKey, name))
+}

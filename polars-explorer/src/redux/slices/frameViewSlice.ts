@@ -77,6 +77,10 @@ export const frameViewSlice = createSlice({
                 state.openedFrameViewKey = [-1, -1]
             }
         },
+        renameView: (state, action: PayloadAction<[number, number, string]>) => {
+            const [frameKey, viewKey, name] = action.payload;
+            state.frameViewMap[frameKey][viewKey].name = name;
+        },
 
         clearQueryPlan: (state) => {
             state.queryPlan = "";

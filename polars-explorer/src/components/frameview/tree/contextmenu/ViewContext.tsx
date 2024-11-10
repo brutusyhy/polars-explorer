@@ -5,7 +5,8 @@ import {
     ContextMenuTrigger,
 } from "@/components/ui/context-menu.tsx"
 import ViewTreeItem from "@/components/frameview/tree/ViewTreeItem.tsx";
-import {delete_view} from "@/services/commands.ts";
+import {delete_view, rename_frame, rename_view} from "@/services/commands.ts";
+import RenameDialog from "@/components/frameview/tree/contextmenu/RenameDialog.ts";
 
 export default function ViewContext({frameKey, viewKey, name}: { frameKey: number, viewKey: number, name: string }) {
     // TODO: Implement functionalities
@@ -15,7 +16,16 @@ export default function ViewContext({frameKey, viewKey, name}: { frameKey: numbe
                 <ViewTreeItem frameKey={frameKey} viewKey={viewKey} name={name}/>
             </ContextMenuTrigger>
             <ContextMenuContent>
-                <ContextMenuItem>Rename View</ContextMenuItem>
+                <ContextMenuItem onClick={
+                    async () => {
+                        const newName = RenameDialog("view");
+                        await rename_view({
+                            frameKey,
+                            viewKey,
+                            name: newName
+                        })
+                    }
+                }>Rename View</ContextMenuItem>
                 <ContextMenuItem onClick={
                     async () => {
                         // Cannot delete base view

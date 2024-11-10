@@ -157,3 +157,14 @@ pub fn delete_view(
         Ok(())
     }
 }
+
+#[tauri::command]
+pub fn rename_view(
+    frameKey: usize,
+    viewKey: usize,
+    name: String,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    state.rename_view(frameKey, viewKey, name);
+    Ok(())
+}

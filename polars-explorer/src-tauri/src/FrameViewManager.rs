@@ -54,4 +54,8 @@ impl FrameViewManager {
     pub(crate) fn get_lazyframe(&self, key: usize) -> LazyFrame {
         self.view_map.get(&key).unwrap().frame.to_owned()
     }
+
+    pub(crate) fn rename(&mut self, key: usize, name: String) {
+        self.view_map.get_mut(&key).unwrap().info.name = name;
+    }
 }
