@@ -1,4 +1,4 @@
-use crate::Payload::{DataFrameInfo, DataInfo, DataJSON, PageInfo};
+use crate::Payload::{DataInfo, DataJSON, PageInfo};
 use tauri::ipc::Channel;
 
 pub type DataChannel = Channel<DataJSON>;

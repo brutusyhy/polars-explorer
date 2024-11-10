@@ -2,7 +2,6 @@
 // It should be a serialized Array in JSON format
 
 use polars::prelude::{col, Expr};
-use serde::Deserialize;
 pub type JSONArray = String;
 
 

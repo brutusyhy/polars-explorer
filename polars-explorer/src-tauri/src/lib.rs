@@ -21,7 +21,7 @@ pub fn run() {
             Commands::open_csv,
             Commands::turn_page,
             Commands::switch_view,
-            Commands::select_column
+            Commands::select_columns
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
