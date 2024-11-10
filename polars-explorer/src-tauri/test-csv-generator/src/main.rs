@@ -1,11 +1,11 @@
+use fake::{Dummy, Fake, Faker};
+use rand::seq::SliceRandom;
+use rand::{random, Rng};
+use serde::Serialize;
 use std::fmt::Display;
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use rand::{random, Rng};
-use rand::seq::{IteratorRandom, SliceRandom};
-use fake::{Dummy, Fake, Faker};
 use struct_iterable::Iterable;
-use serde::Serialize;
 
 #[derive(Debug, Dummy, Iterable, Serialize)]
 pub struct AllBaseTypes {
@@ -50,7 +50,6 @@ impl AllBaseTypes {
                                         sep: &str)
     {
         let mut vals = self.to_values();
-        let length = vals.len();
         vals.shuffle(&mut rand::thread_rng());
         write_line(writer, vals, sep);
     }

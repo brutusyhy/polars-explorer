@@ -10,6 +10,7 @@ use polars::prelude::Expr;
 // When we have a Mutex lock over frame_map, there would only be an exclusive access to everything beneath it
 // Especially since all commands go through the state
 // Thus, we can safely remove all lower level locks
+
 pub type Key = AtomicUsize;
 pub(crate) struct LoadedFrameManager {
     // A Tauri managed state keeping track of all in-memory lazyframes
@@ -21,14 +22,12 @@ pub(crate) struct LoadedFrameManager {
 
 impl LoadedFrameManager {
     pub fn query_view(&self, frame_key: usize, view_key: usize) -> FullResponse {
-        // TODO: I know this is a mess, but for now I haven't come up with a better solution
-        // Passing down reference chains in the presence of Mutex is messy
-        // This will pick up the previous pagination info
+        // Now the code is cleaner since we removed lower level Mutexes
 
         let viewResponse = self.frame_map.lock().unwrap()
             .get(&frame_key).unwrap()
-            .view_manager.lock().unwrap()
-            .view_map.lock().unwrap()
+            .view_manager
+            .view_map
             .get(&view_key).unwrap()
             .query();
 
@@ -44,9 +43,9 @@ impl LoadedFrameManager {
     pub fn query_page(&self, frame_key: usize, view_key: usize, page: usize) -> FullResponse {
         // A helper function to first turn the frame to the desired page
         self.frame_map.lock().unwrap()
-            .get(&frame_key).unwrap()
-            .view_manager.lock().unwrap()
-            .view_map.lock().unwrap()
+            .get_mut(&frame_key).unwrap()
+            .view_manager
+            .view_map
             .get_mut(&view_key).unwrap()
             .turn_page(page);
         self.query_view(frame_key, view_key)
@@ -59,13 +58,13 @@ impl LoadedFrameManager {
                           column_selector: Vec<Expr>) -> FullResponse {
         // Selecting columns should create a new lazyframe
         // And a new FrameView under the same LoadedFrame
-
+        let col_count = column_selector.len();
         // First, clone the existing LazyFrame
         let lf =
             self.frame_map.lock().unwrap()
                 .get(&frame_key).unwrap()
-                .view_manager.lock().unwrap()
-                .view_map.lock().unwrap()
+                .view_manager
+                .view_map
                 .get(&view_key).unwrap()
                 .frame.to_owned();
 
@@ -75,9 +74,9 @@ impl LoadedFrameManager {
         // Thereafter, we will use view_manager to load the lazyframe
         let new_viewkey =
             self.frame_map.lock().unwrap()
-                .get(&frame_key).unwrap()
-                .view_manager.lock().unwrap()
-                .add_lazyframe(frame, "Select Columns".to_string(), page_size);
+                .get_mut(&frame_key).unwrap()
+                .view_manager
+                .add_lazyframe(frame, format!("Select {} Columns", col_count), page_size);
 
         // Finally, we will treat this as yet another view query
         self.query_view(frame_key, new_viewkey)
