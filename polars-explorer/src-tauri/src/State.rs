@@ -1,11 +1,11 @@
 use crate::LoadedFrame::LoadedFrame;
-use crate::Payload::FullResponse;
+use crate::Payload::{DataFrameInfo, FullResponse, PageInfo, ViewResponse};
 use std::collections::HashMap;
 use std::sync::atomic::AtomicUsize;
 use std::sync::Mutex;
 use polars::prelude::Expr;
-
-
+use polars::prelude::JoinType::Full;
+use crate::FrameView::DataViewInfo;
 // Thanks to https://www.reddit.com/user/epostma/ for pointing this out:
 // When we have a Mutex lock over frame_map, there would only be an exclusive access to everything beneath it
 // Especially since all commands go through the state
@@ -92,4 +92,8 @@ impl LoadedFrameManager {
     // pub fn get_frame_map_guard(&self) {
     //     self.frame_map.lock()
     // }
+
+    pub fn delete_frame(&self, frame_key: usize) {
+        self.frame_map.lock().unwrap().remove(&frame_key);
+    }
 }

@@ -3,10 +3,10 @@ import {
     selectCurrentPage,
     selectPageSize,
     selectTotalPage
-} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+} from "@/redux/slices/paginationSlice.ts";
 import {PaginationItem, PaginationNext} from "@/components/ui/pagination.tsx";
 import {turn_page} from "@/services/commands.ts";
-import {selectOpenedFrameViewKey} from "@/components/frameview/frameViewSlice.ts";
+import {selectOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
 
 export default function NextPage() {
     const currentPage = useAppSelector(selectCurrentPage);

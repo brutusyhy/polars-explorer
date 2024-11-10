@@ -3,6 +3,8 @@
 
 import {invoke} from "@tauri-apps/api/core";
 import {createChannels} from "@/services/channels.ts";
+import {getOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
+import {deleteFrameCommand} from "@/redux/thunks/frameViewThunk.ts";
 
 
 export async function open_csv({pageSize}: { pageSize: number }) {
@@ -86,3 +88,25 @@ export async function select_columns({frameKey, viewKey, pageSize, columns}: {
 //     console.log(`Renaming view ${frameKey}-${viewKey}`);
 //
 // }
+
+// TODO: not ideal not ideal...
+export async function delete_frame({frameKeyToDelete, currentFrameKey}: {
+    frameKeyToDelete: number,
+    currentFrameKey: number
+}) {
+    const {clearChannel} = createChannels();
+    console.log(`Delete frame ${frameKeyToDelete}`)
+    await invoke("delete_frame", {
+        frameKeyToDelete,
+        currentFrameKey,
+        clearChannel
+    });
+    deleteFrameCommand(frameKeyToDelete)
+}
+
+// export async function delete_view({frameKeyToDelete, viewKeyToDelete, currentFrameKey, currentViewKey}: {
+//     const [currentFrameKey, cu]
+//     frameKeyToDelete: number,
+//     viewKeyToDelete: number,
+//     curr
+// })

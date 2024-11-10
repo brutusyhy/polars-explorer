@@ -9,6 +9,8 @@ import {
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "@/redux/store.ts";
 
+// TODO: As the app gets more complicated and query becomes more important
+// Maybe it's better to extract query into a new slice
 interface DataFrameState {
     dataFrameMap: DataFrameMap
     frameViewMap: FrameViewMap
@@ -49,10 +51,26 @@ export const frameViewSlice = createSlice({
             state.queryPlan = viewInfo.queryInfo.plan;
         },
 
-
+        deleteFrame: (state, action: PayloadAction<number>) => {
+            const frameKey = action.payload
+            // 1. Delete frame from dataFrameMap
+            delete state.dataFrameMap[frameKey];
+            // 2. Delete frame from frameViewMap
+            delete state.frameViewMap[frameKey];
+            // 3. If the frame is currently opened, reset the currently opened frameViewKey
+            const openedFrameKey = state.openedFrameViewKey[0]
+            if (frameKey === openedFrameKey) {
+                state.openedFrameViewKey = [-1, -1]
+            }
+        },
+        clearQueryPlan: (state) => {
+            state.queryPlan = "";
+        }
     }
 })
-export const {loadView} = frameViewSlice.actions;
+
+
+export const {loadView, clearQueryPlan} = frameViewSlice.actions;
 export const selectDataFrameMap = (state: RootState) => state.dataFrame.dataFrameMap;
 export const selectFrameViewMap = (state: RootState) => state.dataFrame.frameViewMap;
 export const selectOpenedFrameViewKey = (state: RootState) => state.dataFrame.openedFrameViewKey;
@@ -73,5 +91,14 @@ export const selectOpenedFrameInfo = (state: RootState) => {
 }
 
 export const selectQueryPlan = (state: RootState) => state.dataFrame.queryPlan
+
+// A thunk function that allows commands to delete a dataFrame
+// TODO: This is not ideal as it goes against my architecture design
+// In my design, the frontend should change as a result of message from the backend
+// Not mutating itself
+// But let's go with this approach for now
+
+
+// function deleteFrameThunk
 
 export default frameViewSlice.reducer;

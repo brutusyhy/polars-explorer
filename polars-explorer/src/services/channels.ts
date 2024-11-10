@@ -1,8 +1,8 @@
-import {DataChannel, DataInfo, InfoChannel, DataJSON, PageChannel, PageInfo} from "@/Typing.ts";
+import {DataChannel, DataInfo, InfoChannel, DataJSON, PageChannel, PageInfo, ClearChannel} from "@/Typing.ts";
 import {Channel} from "@tauri-apps/api/core";
-import {loadView} from "@/components/frameview/frameViewSlice.ts";
-import {loadData} from "@/components/dataexplorer/datatable/dataTableSlice.ts";
-import {setPagination} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+import {clearQueryPlan, loadView, resetFrameView} from "@/redux/slices/frameViewSlice.ts";
+import {loadData, resetData} from "@/redux/slices/dataTableSlice.ts";
+import {resetPagination, setPagination} from "@/redux/slices/paginationSlice.ts";
 import {store} from "@/redux/store.ts";
 
 
@@ -12,6 +12,7 @@ import {store} from "@/redux/store.ts";
 
 
 // Use Thunks function to generate channels before all communication
+// It would be messy to set up individual Channel thunk functions
 // @ts-ignore
 function createChannelsThunk(dispatch, getState) {
     console.log("Channels initiated");
@@ -21,7 +22,7 @@ function createChannelsThunk(dispatch, getState) {
     let infoChannel: InfoChannel = new Channel<DataInfo>();
     let dataChannel: DataChannel = new Channel<DataJSON>();
     let pageChannel: PageChannel = new Channel<PageInfo>();
-
+    let clearChannel: ClearChannel = new Channel<boolean>();
 
     infoChannel.onmessage = (message: DataInfo) => {
         console.log("InfoChannel Message")
@@ -40,10 +41,22 @@ function createChannelsThunk(dispatch, getState) {
         //console.log(message)
         dispatch(setPagination(message));
     };
+
+    clearChannel.onmessage = (message: boolean) => {
+        // TODO: There's still some confusion as to the role of clearChannel
+        // For now, I will let it clear the Data and Pagination info
+        // And also the queryPlan
+        // They are safe to clear, unlike FrameViewTree
+        console.log("ClearChannel Message");
+        dispatch(resetData());
+        dispatch(resetPagination());
+        dispatch(clearQueryPlan());
+    }
     return {
-        infoChannel: infoChannel,
-        dataChannel: dataChannel,
-        pageChannel: pageChannel,
+        infoChannel,
+        dataChannel,
+        pageChannel,
+        clearChannel
     };
 }
 

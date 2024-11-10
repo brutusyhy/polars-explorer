@@ -1,4 +1,4 @@
-use crate::Channels::{DataChannel, InfoChannel, PageChannel};
+use crate::Channels::{ClearChannel, DataChannel, InfoChannel, PageChannel};
 use crate::Filesystem;
 use crate::LoadedFrame::LoadedFrame;
 use crate::State::LoadedFrameManager;
@@ -110,3 +110,25 @@ pub fn select_columns(
 //     infoChannel: InfoChannel,
 //     state: State<LoadedFrameManager>,
 // ) -> Result<(), String> {}
+
+
+#[tauri::command]
+pub fn delete_frame(
+    frameKeyToDelete: usize,
+    currentFrameKey: usize,
+    clearChannel: ClearChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    // 1. We first delete the target frame
+    state.delete_frame(frameKeyToDelete);
+
+    // 2. Check if we deleted the currentFrame
+    // If so, the ui will be cleared
+    // Otherwise, the ui should not change
+    if frameKeyToDelete == currentFrameKey {
+        Ok(clearChannel.send(true).unwrap())
+    } else {
+        Ok(())
+    }
+}
+

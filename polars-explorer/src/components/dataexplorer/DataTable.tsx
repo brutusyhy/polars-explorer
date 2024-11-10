@@ -2,8 +2,8 @@ import DataCell from "@/components/dataexplorer/datatable/DataCell.tsx";
 import DataHeader from "@/components/dataexplorer/datatable/DataHeader.tsx";
 import {TableData} from "@/Typing.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectData} from "@/components/dataexplorer/datatable/dataTableSlice.ts";
-import {selectCurrentPage, selectPageSize} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+import {selectData} from "@/redux/slices/dataTableSlice.ts";
+import {selectCurrentPage, selectPageSize} from "@/redux/slices/paginationSlice.ts";
 
 
 export default function DataTable() {

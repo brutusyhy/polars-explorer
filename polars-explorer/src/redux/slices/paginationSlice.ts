@@ -24,11 +24,14 @@ export const paginationSlice = createSlice({
             //console.log(newPage)
             console.log(`Current state:`)
             //console.log(current(state))
+        },
+        resetPagination: (state) => {
+            Object.assign(state, initialState);
         }
     }
 })
 
-export const {setPagination} = paginationSlice.actions;
+export const {setPagination, resetPagination} = paginationSlice.actions;
 export const selectPageSize = (state: RootState) => state.pagination.pageSize
 export const selectCurrentPage = (state: RootState) => state.pagination.currentPage
 export const selectTotalPage = (state: RootState) => state.pagination.totalPage

@@ -4,7 +4,7 @@ import {
     selectOpenedFrameInfo,
     selectOpenedFrameViewKey,
     selectOpenedViewInfo
-} from "@/components/frameview/frameViewSlice.ts";
+} from "@/redux/slices/frameViewSlice.ts";
 import ColumnSelector from "@/components/frameview/info/ColumnSelector.tsx";
 import ApplyFilter from "@/components/frameview/info/ApplyFilter.tsx";
 

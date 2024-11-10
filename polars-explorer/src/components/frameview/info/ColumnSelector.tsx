@@ -1,6 +1,6 @@
 import {ColumnInfo, TableData} from "@/Typing.ts";
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectColumnInfo} from "@/components/dataexplorer/datatable/dataTableSlice.ts";
+import {selectColumnInfo} from "@/redux/slices/dataTableSlice.ts";
 import {useEffect, useState} from "react";
 import ApplyFilter from "@/components/frameview/info/ApplyFilter.tsx";
 

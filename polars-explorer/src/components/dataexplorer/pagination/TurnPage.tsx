@@ -1,6 +1,6 @@
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectOpenedFrameViewKey} from "@/components/frameview/frameViewSlice.ts";
-import {selectPageSize} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+import {selectOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
+import {selectPageSize} from "@/redux/slices/paginationSlice.ts";
 import {turn_page} from "@/services/commands.ts";
 
 export default function TurnPage({page}: { page: number }) {

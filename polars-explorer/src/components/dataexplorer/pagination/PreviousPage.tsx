@@ -2,9 +2,9 @@ import {useAppSelector} from "@/redux/hooks.ts";
 import {
     selectCurrentPage,
     selectPageSize,
-} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+} from "@/redux/slices/paginationSlice.ts";
 import {PaginationItem, PaginationPrevious} from "@/components/ui/pagination.tsx";
-import {selectOpenedFrameViewKey} from "@/components/frameview/frameViewSlice.ts";
+import {selectOpenedFrameViewKey} from "@/redux/slices/frameViewSlice.ts";
 import {turn_page} from "@/services/commands.ts";
 
 export default function PreviousPage() {
