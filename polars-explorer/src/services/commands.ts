@@ -162,5 +162,17 @@ export async function turn_view_into_frame({frameKey, viewKey}: {
     // The infoChannel will correctly add new Frame
     // But we need to delete old view
     deleteViewCommand(frameKey, viewKey);
-
 }
+
+export async function export_view({frameKey, viewKey}: {
+    frameKey: number,
+    viewKey: number,
+}) {
+    console.log(`Export view ${frameKey}-${viewKey}`);
+    await invoke("export", {
+        frameKey,
+        viewKey
+    });
+    alert("Successfully exported view as csv!")
+}
+

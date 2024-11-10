@@ -184,3 +184,19 @@ pub fn turn_view_into_frame(
     Ok(())
     //
 }
+
+// Prompt the user to select a place to save a csv result
+#[tauri::command]
+pub fn export(
+    frameKey: usize,
+    viewKey: usize,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    println!("fn export");
+    if let Some(file_handle) = Filesystem::save_file_dialog() {
+        state.export_view(frameKey, viewKey, file_handle);
+        Ok(())
+    } else {
+        Err(format!("Could not get a file_handle"))
+    }
+}

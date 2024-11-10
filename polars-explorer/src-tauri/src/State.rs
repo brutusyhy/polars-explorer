@@ -1,6 +1,7 @@
 use crate::LoadedFrame::LoadedFrame;
 use crate::Payload::{DataFrameInfo, DataInfo, FullResponse, PageInfo, ViewResponse};
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::sync::atomic::AtomicUsize;
 use std::sync::Mutex;
 use polars::prelude::{Expr, LazyFrame};
@@ -64,7 +65,6 @@ impl LoadedFrameManager {
         //
         self.frame_map.lock().unwrap().insert(key, frame);
     }
-
 
     pub fn query_view(&self, frame_key: usize, view_key: usize) -> FullResponse {
         // Now the code is cleaner since we removed lower level Mutexes
@@ -154,5 +154,10 @@ impl LoadedFrameManager {
         self.frame_map.lock().unwrap()
             .get_mut(&frame_key).unwrap()
             .view_manager.rename(view_key, name);
+    }
+    pub fn export_view(&self, frame_key: usize, view_key: usize, file_handle: PathBuf) {
+        self.frame_map.lock().unwrap()
+            .get(&frame_key).unwrap()
+            .view_manager.export(view_key, file_handle);
     }
 }

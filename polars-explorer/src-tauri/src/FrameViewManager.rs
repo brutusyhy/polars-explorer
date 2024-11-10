@@ -1,8 +1,12 @@
 use crate::FrameView::{DataViewInfo, FrameView};
 use crate::State::Key;
-use polars::prelude::LazyFrame;
+use polars::prelude::{CsvWriter, LazyFrame};
 use std::collections::HashMap;
+use std::fs::File;
+use std::path::PathBuf;
 use std::sync::atomic::Ordering;
+use std::io::Write;
+use polars::io::SerWriter;
 use crate::LoadedFrame::LoadedFrame;
 use crate::Payload::ViewResponse;
 // Each LoadedFrame keeps a FrameViewManager
@@ -76,5 +80,14 @@ impl FrameViewManager {
 
     pub(crate) fn rename(&mut self, key: usize, name: String) {
         self.view_map.get_mut(&key).unwrap().info.name = name;
+    }
+
+    pub(crate) fn export(&self, key: usize, file_handle: PathBuf) {
+        let mut file = File::create(file_handle).unwrap();
+        let mut df = self.get_lazyframe(key).clone().collect().unwrap();
+        CsvWriter::new(&mut file)
+            .include_header(true)
+            .with_separator(b',')
+            .finish(&mut df).unwrap()
     }
 }
