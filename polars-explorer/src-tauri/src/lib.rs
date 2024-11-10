@@ -21,7 +21,13 @@ pub fn run() {
             Commands::open_csv,
             Commands::turn_page,
             Commands::switch_view,
-            Commands::select_columns
+            Commands::select_columns,
+            Commands::delete_frame,
+            Commands::rename_frame,
+            Commands::delete_view,
+            Commands::rename_view,
+            Commands::turn_view_into_frame,
+            Commands::export,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

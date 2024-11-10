@@ -17,11 +17,14 @@ export const dataTableSlice = createSlice({
     reducers: {
         loadData: (state, action: PayloadAction<TableData>) => {
             state.data = action.payload
+        },
+        resetData: (state) => {
+            Object.assign(state, initialState)
         }
     }
 })
 
-export const {loadData} = dataTableSlice.actions;
+export const {loadData, resetData} = dataTableSlice.actions;
 
 export const selectData = (state: RootState) => state.dataTable.data;
 export const selectColumnInfo = (state: RootState) => {

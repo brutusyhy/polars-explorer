@@ -1,5 +1,5 @@
 import {useAppSelector} from "@/redux/hooks.ts";
-import {selectQueryPlan} from "@/components/frameview/frameViewSlice.ts";
+import {selectQueryPlan} from "@/redux/slices/frameViewSlice.ts";
 
 export default function QueryPlan() {
     const queryPlan = useAppSelector(selectQueryPlan)

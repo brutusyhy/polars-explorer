@@ -11,7 +11,7 @@ import {useAppSelector} from "@/redux/hooks.ts";
 import {
     selectCurrentPage,
     selectTotalPage,
-} from "@/components/dataexplorer/pagination/paginationSlice.ts";
+} from "@/redux/slices/paginationSlice.ts";
 import NextPage from "@/components/dataexplorer/pagination/NextPage.tsx";
 import PreviousPage from "@/components/dataexplorer/pagination/PreviousPage.tsx";
 import {Baby} from "lucide-react";

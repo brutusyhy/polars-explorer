@@ -8,3 +8,10 @@ pub fn open_file_dialog() -> Option<PathBuf> {
         .set_directory(PathBuf::from("/"))
         .pick_file()
 }
+
+pub fn save_file_dialog() -> Option<PathBuf> {
+    FileDialog::new()
+        .add_filter("csv", &["csv"])
+        .set_directory("/")
+        .save_file()
+}

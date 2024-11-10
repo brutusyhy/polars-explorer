@@ -80,3 +80,5 @@ export type PageChannel = Channel<PageInfo>;
 // This type is used to pass an array from the frontend to the backend
 // It should be a serialized Array in JSON format
 export type JSONArray = string;
+
+export type ClearChannel = Channel<boolean>;

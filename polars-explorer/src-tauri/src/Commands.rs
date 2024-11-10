@@ -1,9 +1,10 @@
-use crate::Channels::{DataChannel, InfoChannel, PageChannel};
+use crate::Channels::{ClearChannel, DataChannel, InfoChannel, PageChannel};
 use crate::Filesystem;
 use crate::LoadedFrame::LoadedFrame;
 use crate::State::LoadedFrameManager;
 use polars::prelude::*;
 use tauri::State;
+use crate::Payload::DataInfo;
 use crate::Query::{column_selector, JSONArray};
 
 // A normal command flow:
@@ -40,7 +41,7 @@ pub fn open_csv(
 
             // Load LazyFrame into backend state manager
             // https://docs.rs/tauri/latest/tauri/struct.Builder.html#method.manage
-            let frame_key = LoadedFrame::load(lf, name, &state);
+            let frame_key = state.load_lazyframe(lf, name);
             // LoadedFrame automatically generates a base view
             let view_key = 0;
             let response = state.query_view(frame_key, view_key);
@@ -94,19 +95,108 @@ pub fn select_columns(
     state: State<LoadedFrameManager>,
 ) -> Result<(), String> {
     let selector = column_selector(columnJSON)?;
-    let response = state.select_columns(frameKey, viewKey, pageSize, selector);
+    let response = state.query_select_columns(frameKey, viewKey, pageSize, selector);
     match response.send(infoChannel, dataChannel, pageChannel) {
         Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }
 }
 
-// TODO: Context Menu
-// #[tauri::command]
-// pub fn rename_view(
-//     frameKey: usize,
-//     viewKey: usize,
-//     name: String,
-//     infoChannel: InfoChannel,
-//     state: State<LoadedFrameManager>,
-// ) -> Result<(), String> {}
+#[tauri::command]
+pub fn delete_frame(
+    frameKey: usize,
+    currentFrameKey: usize,
+    clearChannel: ClearChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    // 1. We first delete the target frame
+    state.remove_frame(frameKey);
+
+    // 2. Check if we deleted the currentFrame
+    // If so, the ui will be cleared
+    // Otherwise, the ui should not change
+    if frameKey == currentFrameKey {
+        Ok(clearChannel.send(true).unwrap())
+    } else {
+        Ok(())
+    }
+}
+
+// TODO: Because we haven't split viewInfo from frameInfo
+// We need to update both at the same time...
+// But I also feel that refactoring is not worth it...?
+// We'd better refrain from refreshing the frontend with message at this step
+#[tauri::command]
+pub fn rename_frame(
+    frameKey: usize,
+    name: String,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    state.rename_frame(frameKey, name);
+    Ok(())
+}
+
+#[tauri::command]
+pub fn delete_view(
+    frameKey: usize,
+    viewKey: usize,
+    currentFrameKey: usize,
+    currentViewKey: usize,
+    clearChannel: ClearChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    // 1. We first delete the target frame
+    state.remove_view(frameKey, viewKey);
+
+    // 2. Check if we deleted the currentView
+    // If so, the ui will be cleared
+    // Otherwise, the ui should not change
+    if frameKey == currentFrameKey && currentViewKey == viewKey {
+        Ok(clearChannel.send(true).unwrap())
+    } else {
+        Ok(())
+    }
+}
+
+#[tauri::command]
+pub fn rename_view(
+    frameKey: usize,
+    viewKey: usize,
+    name: String,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    state.rename_view(frameKey, viewKey, name);
+    Ok(())
+}
+
+// This command will turn a view into a standalone frame
+#[tauri::command]
+pub fn turn_view_into_frame(
+    frameKey: usize,
+    viewKey: usize,
+    infoChannel: InfoChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    let new_framekey = state.turn_view_into_frame(frameKey, viewKey);
+    // Query the base view info of the newly created LoadedFrame
+    let info = state.query_info(new_framekey, 0);
+    infoChannel.send(info);
+    Ok(())
+    //
+}
+
+// Prompt the user to select a place to save a csv result
+#[tauri::command]
+pub fn export(
+    frameKey: usize,
+    viewKey: usize,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    println!("fn export");
+    if let Some(file_handle) = Filesystem::save_file_dialog() {
+        state.export_view(frameKey, viewKey, file_handle);
+        Ok(())
+    } else {
+        Err(format!("Could not get a file_handle"))
+    }
+}

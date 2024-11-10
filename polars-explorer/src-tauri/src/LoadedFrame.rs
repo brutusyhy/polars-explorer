@@ -14,30 +14,24 @@ pub struct LoadedFrame {
 }
 
 impl LoadedFrame {
-    pub fn load(base: LazyFrame, name: String, state: &State<LoadedFrameManager>) -> usize {
-        // Load the lazyframe into managed states
-        // Returns the key for the loaded lazyframe
-        let frame_key = state.next_key.fetch_add(1, Ordering::Relaxed);
-        let frameInfo = DataFrameInfo {
-            key: frame_key,
-            name: name.clone(),
-        };
-        let mut loaded_frame = LoadedFrame {
-            base: base.clone(),
-            view_manager: FrameViewManager::new(),
+    // frameInfo contains key
+    // It must be passed from the LoadedFrameManager
+    pub fn from_view(view: FrameView, frameInfo: DataFrameInfo) -> Self {
+        // This will create a new LoadedFrame that uses a given view as the base view
+        let base = view.frame.clone();
+        LoadedFrame {
+            base,
+            view_manager: FrameViewManager::from_base_view(view),
             frameInfo,
-        };
-        // Initialize the loadedframe with a base view
-        // The base view will always have a key of 0
-        let _ = loaded_frame
-            .view_manager
-            .add(FrameView::base(name, base));
-        // Insert the LoadedFrame into the managed state
-        state
-            .frame_map
-            .lock()
-            .unwrap()
-            .insert(frame_key, loaded_frame);
-        frame_key
+        }
+    }
+
+    pub fn from_base_lazyframe(base: LazyFrame, frameInfo: DataFrameInfo) -> Self {
+        LoadedFrame {
+            base: base.clone(),
+            // Construct a base view from the lazyframe
+            view_manager: FrameViewManager::from_base_lazyframe(base),
+            frameInfo,
+        }
     }
 }
