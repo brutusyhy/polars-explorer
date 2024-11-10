@@ -38,6 +38,8 @@ pub struct DataInfo {
 }
 
 
+// TODO: I will need to change this weird FullResponse
+
 pub struct FullResponse {
     pub view: ViewResponse,
     pub frameInfo: DataFrameInfo,
@@ -46,6 +48,7 @@ pub struct FullResponse {
 // TODO: Right now, the transmitting of message is inconsistent
 // Not all messages have to be FullResponse, but using individual channels is not ideal
 // Maybe better refactor FullResponse to take optional fields
+
 
 impl FullResponse {
     pub fn send(

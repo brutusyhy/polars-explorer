@@ -146,3 +146,21 @@ export async function rename_view({frameKey, viewKey, name}: {
     });
     renameViewCommand(frameKey, viewKey, name);
 }
+
+
+export async function turn_view_into_frame({frameKey, viewKey}: {
+    frameKey: number,
+    viewKey: number,
+}) {
+    console.log(`Turn view ${frameKey}-${viewKey} into a standalone frame`);
+    const {infoChannel} = createChannels();
+    await invoke("turn_view_into_frame", {
+        frameKey,
+        viewKey,
+        infoChannel
+    });
+    // The infoChannel will correctly add new Frame
+    // But we need to delete old view
+    deleteViewCommand(frameKey, viewKey);
+
+}

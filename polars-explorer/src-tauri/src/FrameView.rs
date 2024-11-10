@@ -2,6 +2,7 @@ use crate::LazyFrame::{get_cols, get_rows};
 use crate::Payload::{PageInfo, QueryInfo, ViewResponse};
 use polars::prelude::{IdxSize, LazyFrame};
 use serde::Serialize;
+use crate::LoadedFrame::LoadedFrame;
 
 #[derive(Clone)]
 pub(crate) struct ColumnInfo {
@@ -55,7 +56,7 @@ impl FrameView {
         }
     }
 
-    pub(crate) fn base(name: String, frame: LazyFrame) -> Self {
+    pub(crate) fn base(frame: LazyFrame) -> Self {
         // Conveniently get the base view of a lazyframe
         Self::new(0, "Base".to_string(), frame, 20)
     }

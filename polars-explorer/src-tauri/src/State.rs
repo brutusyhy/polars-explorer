@@ -1,11 +1,12 @@
 use crate::LoadedFrame::LoadedFrame;
-use crate::Payload::{DataFrameInfo, FullResponse, PageInfo, ViewResponse};
+use crate::Payload::{DataFrameInfo, DataInfo, FullResponse, PageInfo, ViewResponse};
 use std::collections::HashMap;
 use std::sync::atomic::AtomicUsize;
 use std::sync::Mutex;
-use polars::prelude::Expr;
+use polars::prelude::{Expr, LazyFrame};
 use polars::prelude::JoinType::Full;
 use crate::FrameView::{DataViewInfo, FrameView};
+use crate::FrameViewManager::FrameViewManager;
 // Thanks to https://www.reddit.com/user/epostma/ for pointing this out:
 // When we have a Mutex lock over frame_map, there would only be an exclusive access to everything beneath it
 // Especially since all commands go through the state
@@ -23,6 +24,48 @@ pub(crate) struct LoadedFrameManager {
 // query_xxx => returns a response
 
 impl LoadedFrameManager {
+    pub fn load_lazyframe(&self, base: LazyFrame, name: String) -> usize {
+        // Load the lazyframe into managed states
+        // Returns the key for the loaded lazyframe
+
+        // 1. Create the LoadedFrame based on a LazyFrame
+        let key = self.next_key.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let frameInfo = DataFrameInfo {
+            key,
+            name,
+        };
+        let loaded_frame = LoadedFrame::from_base_lazyframe(base, frameInfo);
+        // 2. Add the LoadedFrame into the managed state
+        self.add(key, loaded_frame);
+        // 3. Return the key for the new LoadedFrame
+        key
+    }
+
+    pub fn turn_view_into_frame(&self, frame_key: usize, view_key: usize) -> usize {
+        // This function removes a view from a LoadedFrame
+        // Creates a new LoadedFrame based on the view
+        // And add it to the managed state
+        // Returns the key for the new LoadedFrame
+
+        // 1. Remove the view from the LoadedFrame
+        let view = self.remove_view(frame_key, view_key);
+        // 2. Create a new LoadedFrame based on the view
+        let key = self.next_key.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let name = view.info.name.clone();
+        let frameInfo = DataFrameInfo { key, name };
+        let loaded_frame = LoadedFrame::from_view(view, frameInfo);
+        // 3. Add the LoadedFrame into the managed state
+        self.add(key, loaded_frame);
+        // 4. Return the key for the new LoadedFrame
+        key
+    }
+
+    pub fn add(&self, key: usize, frame: LoadedFrame) {
+        //
+        self.frame_map.lock().unwrap().insert(key, frame);
+    }
+
+
     pub fn query_view(&self, frame_key: usize, view_key: usize) -> FullResponse {
         // Now the code is cleaner since we removed lower level Mutexes
 
@@ -74,6 +117,12 @@ impl LoadedFrameManager {
         // Finally, we will treat this as yet another view query
         self.query_view(frame_key, new_viewkey)
     }
+    pub fn query_info(&self, frame_key: usize, view_key: usize) -> DataInfo {
+        DataInfo {
+            frameInfo: self.get_frame_info(frame_key),
+            viewInfo: self.get_view_info(frame_key, view_key),
+        }
+    }
 
     pub fn get_frame_info(&self, frame_key: usize) -> DataFrameInfo {
         self.frame_map.lock().unwrap()
@@ -86,18 +135,20 @@ impl LoadedFrameManager {
             .get(&frame_key).unwrap()
             .view_manager.get_view_info(view_key)
     }
-    pub fn delete_frame(&self, frame_key: usize) {
-        self.frame_map.lock().unwrap().remove(&frame_key);
+    pub fn remove_frame(&self, frame_key: usize) -> LoadedFrame {
+        self.frame_map.lock().unwrap().remove(&frame_key).unwrap()
     }
     pub fn rename_frame(&self, frame_key: usize, name: String) {
         self.frame_map.lock().unwrap()
             .get_mut(&frame_key).unwrap()
             .frameInfo.name = name;
     }
-    pub fn delete_view(&self, frame_key: usize, view_key: usize) {
+
+    // For convenience,
+    pub fn remove_view(&self, frame_key: usize, view_key: usize) -> FrameView {
         self.frame_map.lock().unwrap()
             .get_mut(&frame_key).unwrap()
-            .view_manager.delete(view_key)
+            .view_manager.remove(view_key)
     }
     pub fn rename_view(&self, frame_key: usize, view_key: usize, name: String) {
         self.frame_map.lock().unwrap()

@@ -5,7 +5,7 @@ import {
     ContextMenuTrigger,
 } from "@/components/ui/context-menu.tsx"
 import ViewTreeItem from "@/components/frameview/tree/ViewTreeItem.tsx";
-import {delete_view, rename_frame, rename_view} from "@/services/commands.ts";
+import {delete_view, rename_frame, rename_view, turn_view_into_frame} from "@/services/commands.ts";
 import RenameDialog from "@/components/frameview/tree/contextmenu/RenameDialog.ts";
 
 export default function ViewContext({frameKey, viewKey, name}: { frameKey: number, viewKey: number, name: string }) {
@@ -36,7 +36,15 @@ export default function ViewContext({frameKey, viewKey, name}: { frameKey: numbe
                         }
                     }
                 }>Delete View</ContextMenuItem>
-                <ContextMenuItem>Turn Into Frame</ContextMenuItem>
+                <ContextMenuItem onClick={
+                    async () => {
+                        if (viewKey === 0) {
+                            alert("Cannot turn a base view into a new frame");
+                        } else {
+                            await turn_view_into_frame({frameKey, viewKey});
+                        }
+                    }
+                }>Turn Into Frame</ContextMenuItem>
                 <ContextMenuItem>Export</ContextMenuItem>
             </ContextMenuContent>
         </ContextMenu>

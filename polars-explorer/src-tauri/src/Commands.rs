@@ -41,7 +41,7 @@ pub fn open_csv(
 
             // Load LazyFrame into backend state manager
             // https://docs.rs/tauri/latest/tauri/struct.Builder.html#method.manage
-            let frame_key = LoadedFrame::load(lf, name, &state);
+            let frame_key = state.load_lazyframe(lf, name);
             // LoadedFrame automatically generates a base view
             let view_key = 0;
             let response = state.query_view(frame_key, view_key);
@@ -110,7 +110,7 @@ pub fn delete_frame(
     state: State<LoadedFrameManager>,
 ) -> Result<(), String> {
     // 1. We first delete the target frame
-    state.delete_frame(frameKey);
+    state.remove_frame(frameKey);
 
     // 2. Check if we deleted the currentFrame
     // If so, the ui will be cleared
@@ -146,7 +146,7 @@ pub fn delete_view(
     state: State<LoadedFrameManager>,
 ) -> Result<(), String> {
     // 1. We first delete the target frame
-    state.delete_view(frameKey, viewKey);
+    state.remove_view(frameKey, viewKey);
 
     // 2. Check if we deleted the currentView
     // If so, the ui will be cleared
@@ -167,4 +167,20 @@ pub fn rename_view(
 ) -> Result<(), String> {
     state.rename_view(frameKey, viewKey, name);
     Ok(())
+}
+
+// This command will turn a view into a standalone frame
+#[tauri::command]
+pub fn turn_view_into_frame(
+    frameKey: usize,
+    viewKey: usize,
+    infoChannel: InfoChannel,
+    state: State<LoadedFrameManager>,
+) -> Result<(), String> {
+    let new_framekey = state.turn_view_into_frame(frameKey, viewKey);
+    // Query the base view info of the newly created LoadedFrame
+    let info = state.query_info(new_framekey, 0);
+    infoChannel.send(info);
+    Ok(())
+    //
 }

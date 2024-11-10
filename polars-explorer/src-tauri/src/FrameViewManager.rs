@@ -3,6 +3,7 @@ use crate::State::Key;
 use polars::prelude::LazyFrame;
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
+use crate::LoadedFrame::LoadedFrame;
 use crate::Payload::ViewResponse;
 // Each LoadedFrame keeps a FrameViewManager
 // Which is responsible for handling FrameViews
@@ -19,6 +20,24 @@ impl FrameViewManager {
             next_key: Default::default(),
         }
     }
+    // Create a FrameViewManager that takes an input as base view
+    pub(crate) fn from_base_view(base_view: FrameView) -> Self {
+        let mut view = base_view;
+        // We have to refresh the view's key so that it becomes 0 (base view)
+        view.info.key = 0;
+        let mut manager = FrameViewManager::new();
+        manager.add(view);
+        manager.rename(0, "Base".to_string());
+        manager
+    }
+
+    pub(crate) fn from_base_lazyframe(base_frame: LazyFrame) -> Self {
+        let base_view = FrameView::base(base_frame);
+        let mut manager = FrameViewManager::new();
+        manager.add(base_view);
+        manager
+    }
+
     pub(crate) fn add(&mut self, frame_view: FrameView) -> usize {
         // Add a FrameView to the manager
         // return the key for the loaded view
@@ -27,8 +46,8 @@ impl FrameViewManager {
         *key
     }
 
-    pub(crate) fn delete(&mut self, key: usize) {
-        self.view_map.remove(&key);
+    pub(crate) fn remove(&mut self, key: usize) -> FrameView {
+        self.view_map.remove(&key).unwrap()
     }
     // Why don't I directly provide a method to add a lazyframe?
 
