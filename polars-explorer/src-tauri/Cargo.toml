@@ -1,6 +1,6 @@
 [package]
 name = "polars-explorer"
-version = "0.2.0"
+version = "0.2.5"
 description = "A Data Explorer for Rust Polars"
 authors = ["you"]
 edition = "2021"
@@ -34,3 +34,10 @@ incremental = true
 [profile.dev]
 opt-level = 0
 overflow-checks = false     # Disable integer overflow checks.
+debug = "line-tables-only"
+
+[profile.release]
+lto = true
+panic = "abort"
+codegen-units = 1
+opt-level = "s"
