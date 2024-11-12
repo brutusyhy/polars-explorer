@@ -26,7 +26,7 @@ function App() {
     // } = useDataview();
 
     return (
-        <div className="AppContainer">
+        <div className="AppContainer bg-background">
             {/* Menu Bar */}
             <Menu/>
             <ResizablePanelGroup direction="horizontal">

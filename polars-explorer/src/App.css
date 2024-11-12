@@ -2,10 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        --background: 222 47 11;
+        --foreground: ;
+        --card: ;
+        --card-foreground: ;
+        --popover: var(--background);
+        --popover-foreground: ;
+        --primary: ;
+        --primary-foreground: ;
+        --secondary: ;
+        --secondary-foreground: ;
+        --muted: ;
+        --muted-foreground: ;
+        --accent: ;
+        --accent-foreground: ;
+        --destructive: ;
+        --destructive-foreground: ;
+        --border: ;
+        --input: ;
+        --ring: ;
+        --chart-1: ;
+        --chart-2: ;
+        --chart-3: ;
+        --chart-4: ;
+        --chart-5: ;
+
+    }
+}
+
 /* Ensure that the app's content does not overflow*/
 .AppContainer {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
 }
-
